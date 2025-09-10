@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Professor | PNUICSL</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .profile-card {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 24px;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.05);
+      background: #fff;
+    }
+    .prof-name {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .prof-title {
+      font-size: 16px;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+    .prof-contact {
+      margin-bottom: 24px;
+      color: #334155;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .prof-section {
+      margin-bottom: 24px;
+    }
+    .prof-section h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 8px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
+    .prof-section p {
+      margin: 0;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+    .prof-label {
+  font-size: 20px;
+  font-weight: 700;
+  color: #334155;  
+  margin-bottom: 8px;
+  text-transform: uppercase; 
+  letter-spacing: 1px;      
+}
+  </style>
+</head>
+<body>
+  <div id="site-nav"></div>
+
+  <main class="container">
+    <div class="profile-card">
+      <h3 class="prof-label">PROFESSOR</h3>
+      <h2 class="prof-name">Sung-Yun Park, Ph.D</h2>
+      <div class="prof-title">Electrical Engineering, Pusan National University</div>
+      <div class="prof-contact">
+        Office: The 9th Engineering Officer Room 509, 2, Busandaehak-ro 63beon-gil, Geumjeonggu, Busan, Republic of Korea<br>
+        Email: sungyun@pusan.ac.kr<br>
+        Tel: +82-51-510-2416
+      </div>
+
+      <div class="prof-section">
+        <h3>Biography</h3>
+        <p>Sung-Yun Park received his B.S. in Electrical Engineering from Pusan National University, Busan, Korea in 2005, and his M.S. in Electrical Engineering from Korean Advanced Institute of Science and Technology (KAIST), Daejeon, Korea in 2008, where he was involved in photonics device research. From 2008 to 2010, he worked for the Fairchild Semiconductor, Bucheon, Korea, as a Member of Technical Staff for high voltage mixed signal circuit design. 
+          He continued his study in integrated circuits in Cornell University, Ithaca, NY and received the M. Eng. in Electrical and Computer Engineering in 2011, and his Ph.D. in Electrical Engineering at the University of Michigan in 2016. From 2016 to 2018, he was a research fellow, and from 2018 he was an assistant research scientist at the University of Michigan. 
+          In 2019, he joined the Department of Electronics Engineering at the Pusan National University where he is an assistant professor. 
+          His current research interests are in low power, low noise mixed-signal integrated circuits and power management circuits for biomedical and sensor systems</p>
+      </div>
+
+      <div class="prof-section">
+        <h3>Professional Appointment</h3>
+      </span><li style="font-size: 12pt;"><span style="font-size: 12pt; font-family: arial;">Assistant Professor in Pusan National University, Korea (March 2019 - Present)</span></li><span style="font-size: 12pt;">
+      </span><li style="font-size: 12pt;"><span style="font-size: 12pt; font-family: arial;">Assistant Research Scientist in University of Michigan (June 2018 - February 2019 )</span></li><span style="font-size: 12pt;">
+      </span><li style="font-size: 12pt;"><span style="font-size: 12pt; font-family: arial;">Postdoctoral Research Fellow in University of Michigan (June 2016 - May 2018)</span></li><span style="font-size: 12pt;">
+      </span><li style="font-size: 12pt;"><span style="font-size: 12pt; font-family: arial;">Member of Technical Staff, Fairchild Semiconductor (Currently, On-Semiconductor) (February 2008 - July 2010)</span></li>
+      </div>
+
+      <div class="prof-section">
+  <h3>Research Experience</h3>
+
+    <p><strong>Signal Processing Integrated Circuits</strong>
+    <ul>
+      <li>Low-power, low-noise multi-channel analog front-end for ExAP and LFP recordings</li>
+      <li>Low-power, multi-channel drivers for electrical/optical stimulation</li>
+      <li>EEG recording front-end</li>
+    </ul>
+
+    <p><strong>Integrated DC-to-DC Converter</strong>
+    <ul>
+      <li>Low-power buck converters for biomedical applications</li>
+      <li>Spurious-free, low-power switched-capacitor converters</li>
+    </ul>
+
+    <p><strong>CMOS Image Sensors</strong>
+    <ul>
+      <li>Energy harvesting CMOS imager</li>
+      <li>Bio-inspired optic flow CMOS imager</li>
+    </ul>
+  </div>
+    </div>
+  </main>
+
+  <footer>© <span id="y"></span> PNUICSL</footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+<script src="/assets/nav.js" data-base="/"></script>
+<script>
+  (function addNavTitle(){
+    function place(){
+      const inner = document.querySelector('.nav .nav-inner');
+      if(!inner) return setTimeout(place, 30); 
+      const t = document.createElement('div');
+      t.className = 'nav-title';
+      t.textContent = 'Professor | PNU ICSL'; 
+      inner.appendChild(t);
+    }
+    place();
+  })();
+</script>
+</html>

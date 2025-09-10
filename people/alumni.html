@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Alumni | PNUICSL</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="site-nav"></div>
+
+  <main class="container">
+    <ul class="cards">
+      <li class="card">
+            <h2>Yunjin Jeong</h2>  
+            <p class="career">B.S., 2018.3 ~ 2022.2</p>
+            <p class="mail"><span>Email.</span><span style="user-select: none; -webkit-user-select: none; -moz-user-select: none;"> li5n@naver.com</span></p>
+            <p class="career"><span style="font-size: 10pt; font-family: arial;">Yun-jin Jung  received bachelor's degree in electronics from Busan University. Her research interests were in low-power, low-noise OTAs for recording neural signals. In recognition of these works, she joined LG Display.</span></p>
+         
+       </li>
+      <li class="card">
+            <h2>Hyuntae Park</h2>
+            <p class="career">M.S. candidate., 2021.3 ~ 2022.9</p>
+            <p class="mail"><span>Email.</span><span style="user-select: none; -webkit-user-select: none; -moz-user-select: none;"> ihti1995@naver.com</span></p>
+            <p class="career"><span style="font-size: 10pt; font-family: arial;;">Hyuntae Park received M.S. candidate in Electronic Engineering from Pusan National University, Busan, korea in 2021. His research interests were Two-Step SAR ADC Architecture using Time-Domain Comparator for low power and high resolution in CMOS designs. In recognition of these works, he joined Hyundai Motor Company.</span></p>
+      </li>
+      
+        <li class="card">
+                      <h2>Sangmin Song</h2>
+            <p class="career">M.S. candidate., 2021.9 ~ 2023.2</p>
+            <p class="mail"><span>Email.</span><span style="user-select: none; -webkit-user-select: none; -moz-user-select: none;"> aak4545@naver.com</span></p>
+            <p class="career"><span style="font-size: 10pt; font-family: arial;">Sangmin Song received M.S. candidate in Electronic Engineering from Pusan National University, Busan, korea in 2021. His research interests were in low-power, low-noise, high power conversion efficiency DC-DC converters and photodiode with MPPT controller. In recognition of these works, he joined Pitch Life Science</span></p>
+        </li>
+
+                <li class="card">
+           <h2>Taewon Kim</h2>
+            <p class="career">M.S., 2021.3 ~ 2023.3</p>
+            <p class="mail"><span>Email.</span><span style="user-select: none; -webkit-user-select: none; -moz-user-select: none;"> xodnjs927@naver.com</span></p>
+            <p class="career"><span style="font-size: 10pt; font-family: arial;">Taewon Kim  received his combined B.S - M.S. degree in Department of Electrical and Electronic Engineering from Pusan National University, Busan, korea in 2023. His research interests were in SiC MOSFET gate driver(short circuit protection). In recognition of these works, he joined LG Electronics</span></p>
+        </li>
+    </ul>
+  </main>
+
+  <footer>© <span id="y"></span> PNUICSL</footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  <script src="/assets/nav.js" data-base="/"></script>
+  <script>
+  (function addNavTitle(){
+    function place(){
+      const inner = document.querySelector('.nav .nav-inner');
+      if(!inner) return setTimeout(place, 30); 
+      const t = document.createElement('div');
+      t.className = 'nav-title';
+      t.textContent = 'Alumni | PNU ICSL'; 
+      inner.appendChild(t);
+    }
+    place();
+  })();
+</script>
+</body>
+</html>
+

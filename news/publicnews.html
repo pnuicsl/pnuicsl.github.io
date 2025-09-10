@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Publications — Patents</title>
+<link rel="stylesheet" href="/style.css">
+<style>
+  .pub-container{max-width:1100px;margin:24px auto;padding:0 24px}
+  .pub-tabs{display:flex;gap:24px;justify-content:center;margin:24px 0 6px}
+  .pub-tabs a{color:#94a3b8;text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+  .pub-tabs a.active{color:#2563eb;border-bottom:2px solid #2563eb;padding-bottom:4px}
+  .pub-list{counter-reset:pub;list-style:none;margin:12px 0 60px;padding:0}
+  .pub-list li{counter-increment:pub;margin:22px 0 26px;line-height:1.6;color:#111827}
+  .pub-list li::marker{content:none}
+  .pub-num{color:#64748b;margin-right:8px;font-variant-numeric:tabular-nums}
+  .pub-title{font-weight:600}
+  .pub-authors{margin:2px 0;color:#111827}
+  .pub-venue{font-style:italic;color:#475569}
+  .bold  { font-weight: 800; }
+  .boldu { font-weight: 800; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 2px; }
+</style>
+</head>
+<body>
+<div id="site-nav"></div>
+
+<main class="pub-container">
+  <ol class="pub-list">
+<span>
+<span style="font-family: arial; font-size: 12pt">
+       
+<li>
+<h5><span style="font-family: arial; font-size: 11pt;">2024 Funding</span></h5>
+<p><span style="font-family: arial; font-size: 11pt;">Humanoid Olfactory Display Center, (PI:&nbsp;</span><strong><span style="font-family: arial; font-size: 11pt;">S.-Y. Park</span></strong><span style="font-family: arial; font-size: 11pt;">), Ministry of Science and ICT (MSIT), 2024 – 2034,
+Development of A CMOS read-out Micro-array sensor&nbsp;
+</span></p>
+<p><span style="font-family: arial; font-size: 11pt;">Implantable Large-Scale ECoG Brain-Machine Interface for Motor Restoration and Autonomous Driving Applications, P0028313 (PI:&nbsp;</span><strong><span style="font-family: arial; font-size: 11pt;">S.-Y. Park</span></strong><span style="font-family: arial; font-size: 11pt;">), Korea Institute for Advancement of Technology (KIAT), 2024 – 2027,
+Development of A Fast Bidirectional Wireless Power and Data Transfer system for ECoG&nbsp;
+</span></p>
+<p><span style="font-family: arial; font-size: 11pt;">A Mouthpiece-Type Trigeminal Nerve Stimulation Electronic Medicine for Symptom Alleviation and Brain Health Improvement in Children with Drug-Resistant Attention Deficit Hyperactivity Disorder (ADHD) (PI:&nbsp;</span><strong><span style="font-family: arial; font-size: 11pt;">S.-Y. Park</span></strong><span style="font-family: arial; font-size: 11pt;">), Seoul Business Agency (SBA), 2024 – 2026,
+Development of A CMOS bi-phasic stimulator&nbsp;
+</span></p>
+</li>
+
+<li>
+<h5><span style="font-family: arial; font-size: 11pt;">2023 Funding</span></h5>
+<p><span style="font-family: arial; font-size: 11pt;">Neural recording and simulation tools to address the mesoscale gap, 202408800001 (PI:&nbsp;</span><strong><span style="font-family: arial; font-size: 11pt;">S.-Y. Park</span></strong><span style="font-family: arial; font-size: 11pt;">), National Institutes of Health (NIH) BRAIN Initiative, 2023 – 2025,
+Development of A Neural Humidity and Temperature Sensor for Addressing the Mesoscale Gap&nbsp;
+</span></p></li>
+<li>
+<h5><span style="font-family: arial; font-size: 11pt;">2021 Funding</span></h5>
+<p><span style="font-family: arial; font-size: 11pt;">Low-power integrated circuit design for SNN, 2021M3F3A2A01037961 (PI:&nbsp;</span><strong><span style="font-family: arial; font-size: 11pt;">S.-Y. Park</span></strong><span style="font-family: arial; font-size: 11pt;">), National Research Foundation of Korea (NRF), 2021&nbsp;– 2023,
+Development of A Low-Power Integrated Circuit System for Control of Highly Reliable Spiking Neural Network Neuromorphic Systems&nbsp;
+</span></p></li>
+
+<li style="font-family: arial; font-size: 11pt;">
+<h5><span style="font-family: arial; font-size: 11pt;">2020 Funding</span></h5>
+<p><span style="font-family: arial; font-size: 11pt;">Low-power integrated circuit design for implantable neural interface system, 2020R1A2C2101875 (PI:&nbsp;</span><strong><span style="font-family: arial; font-size: 11pt;">S.-Y. Park</span></strong><span style="font-family: arial; font-size: 11pt;">),
+&nbsp;National Research Foundation of Korea (NRF), 2020 – 2024, Study on Fully Implantable Ultra-Low Power Neural Interface&nbsp;
+</span></p></li>
+
+<li>
+<h5><span style="font-family: arial; font-size: 11pt;">2019 Funding</span></h5>
+<p><span style="font-family: arial; font-size: 11pt;">Low-cost, low-power integrated circuit design for brain-computer interface (PI:&nbsp;</span><strong><span style="font-family: arial; font-size: 11pt;">S.-Y. Park</span></strong><span style="font-family: arial; font-size: 11pt;">),
+Center for Integrated Smart Sensor (CISS), 2019, Development of early diagnosis platform for cancer and BCI chip
+</span></p></li>
+
+  </ol>
+</main>
+
+<footer style="text-align:center;color:#64748b;padding:18px">© <span id="y"></span> PNUICSL</footer>
+<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+<script src="/assets/nav.js" data-base="/"></script>
+<script>
+  (function addNavTitle(){
+    function place(){
+      const inner = document.querySelector('.nav .nav-inner');
+      if(!inner) return setTimeout(place, 30); 
+      const t = document.createElement('div');
+      t.className = 'nav-title';
+      t.textContent = 'Public News | PNU ICSL'; 
+      inner.appendChild(t);
+    }
+    place();
+  })();
+</script>
+</body>
+</html>
