@@ -3,7 +3,7 @@
   const base = (thisScript && thisScript.dataset && thisScript.dataset.base) || "";
   const navUrl = base ? base.replace(/\/?$/, "/") + "partials/nav.html" : "partials/nav.html";
 
-fetch(navUrl, { cache: 'no-store' })
+  fetch(navUrl, { cache: 'no-store' })
     .then(r => r.text())
     .then(html => {
       const mount = document.getElementById("site-nav");
@@ -23,13 +23,20 @@ fetch(navUrl, { cache: 'no-store' })
     const btn = dd.querySelector(".dropbtn");
     if (!btn) return;
 
-    btn.addEventListener("click", e => {
+    function toggleDropdown(e) {
       e.preventDefault();
       dd.classList.toggle("open");
-    });
+    }
 
-    document.addEventListener("click", e => {
+    // PC + 모바일 대응
+    btn.addEventListener("click", toggleDropdown);
+    btn.addEventListener("touchstart", toggleDropdown, { passive: true });
+
+    function closeDropdown(e) {
       if (!dd.contains(e.target)) dd.classList.remove("open");
-    });
+    }
+
+    document.addEventListener("click", closeDropdown);
+    document.addEventListener("touchstart", closeDropdown, { passive: true });
   }
 })();
