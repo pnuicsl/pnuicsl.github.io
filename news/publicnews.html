@@ -19,6 +19,23 @@
   /* optional: headings scale */
   h2{font-size:1.5rem;margin:.25rem 0 1rem}
   h3{font-size:1.125rem;margin:.25rem 0 .5rem}
+
+  /* === Lab photo style === */
+  .lab-photo img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100px;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .lab-photo figcaption {
+    text-align: center;
+    color: #475569;
+    font-size: 0.9rem;
+    margin-top: 6px;
+  }
 </style>
 </head>
 <body>
@@ -28,18 +45,22 @@
   <h2>Lab Activities</h2>
   <h3>2025</h3>
   <figure class="lab-photo">
-  <img src="/assets/Workshop_20250701.jpg" alt="2025 Workship in Geoje Island style="max-width:100px;width:100%;height:auto;border-radius:8px;">
-  <figcaption style="text-align:center;color:#475569;margin-top:8px;">
-    Maemi Castle on the Sea in Geoje Island.
-  </figcaption>
-</figure>
-  
+    <img 
+      src="/assets/Workshop_20250701.jpg" 
+      alt="2025 Workshop in Geoje Island"
+      loading="lazy"
+      decoding="async"
+    >
+    <figcaption>
+      Maemi Castle on the Sea in Geoje Island.
+    </figcaption>
+  </figure>
+
   <h2>Fundings</h2>
 
   <ol class="pub-list">
     <li>
       <h4 class="year">2024 Funding</h4>
-
       <article class="entry">
         <div class="entry-title">Humanoid Olfactory Display Center</div>
         <div>
@@ -149,9 +170,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
