@@ -329,37 +329,9 @@ footer {
 }
 
 /* =========================================================
-   RESPONSIVE FIXES
-   - Mobile overflow handling for nav menu and dropdown
-   ========================================================= */
-@media (max-width:768px){
-  .menu {
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    gap: 14px;
-    white-space: nowrap;
-    max-width: 100%;
-    padding-bottom: 6px;
-    margin: 0 -8px 0 0;
-  }
-  .menu > a, .menu .dropbtn {
-    flex: 0 0 auto;
-    display: inline-block;
-  }
-  .dropdown-menu {
-    left: 0;          /* anchor to left edge on small screens */
-    right: auto;
-    top: 100%;        /* closer to the trigger */
-  }
-}
-
-/* =========================================================
    CAPTION TYPOGRAPHY (Fluid on mobile)
    - Keeps text readable over images by scaling with viewport
-   - '!important' used to override inline/inline-style precedence
-     from page-local styles if present.
+   - '!important' used to override page-local styles if present.
    ========================================================= */
 main section .caption h2 {
   font-size: clamp(16px, 4.2vw, 24px) !important;
@@ -378,85 +350,10 @@ main section .caption p {
 }
 
 /* =========================================================
-   MOBILE-ONLY TWEAKS FOR SUBNAV HEADING
-   - Kept from original; placed near the other media rules
+   RESPONSIVE: NAVIGATION (Consolidated)
+   - Single, deterministic approach: grid 2-row layout
+   - Removes conflicts from previous multiple strategies
    ========================================================= */
-@media (max-width:480px){
-  .subnav h1 { font-size: 22px; }
-}
-
-@media (max-width: 768px){
-  /* nav 전체를 줄바꿈 가능하게 */
-  .nav-inner{
-    flex-wrap: wrap;     /* 2줄 배치 허용 */
-    row-gap: 6px;        /* 줄 간격 */
-  }
-
-  /* 가운데 고정된 타이틀을 일반 흐름으로 */
-  .nav-title{
-    position: static;    /* absolute 해제 */
-    transform: none;     /* 가운데 이동 해제 */
-    width: 100%;         /* 한 줄 전체 차지 */
-    text-align: center;
-    line-height: 1.2;
-    margin: 2px 0 4px;
-    font-size: 16px;     /* 조금 작게 */
-  }
-
-  /* 메뉴는 한 줄 가로 스크롤 허용(이미 일부 설정 있으나 보강) */
-  .menu{
-    order: 2;           /* 타이틀 아래로 배치 */
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    white-space: nowrap;
-    gap: 14px;
-    max-width: 100%;
-    min-width: 0;       /* flex 항목이 줄어들 수 있도록 */
-  }
-
-  /* 메뉴 항목은 줄바꿈 없이 가로 스크롤에 맞춤 */
-  .menu > a,
-  .menu .dropbtn{
-    flex: 0 0 auto;
-    display: inline-block;
-  }
-}
-/* ==== Tiny phones: nudge the menu start to the right ==== */
-@media (max-width: 480px){
-  /* 혹시 이전 규칙에서 absolute가 남아 있을 경우를 대비해 확실히 한 줄 차지 */
-  .nav-title{
-    position: static !important;
-    transform: none !important;
-    width: 100%;
-    text-align: center;
-    line-height: 1.2;
-    margin: 2px 0 6px;
-    font-size: 16px;
-  }
-
-  /* 메뉴를 타이틀 아래(2행)로 두고, 시작점을 오른쪽으로 인덴트 */
-  .menu{
-    order: 2;
-    padding-left: max(28px, env(safe-area-inset-left)); /* ← 시작점 오른쪽으로 이동 */
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    white-space: nowrap;
-    gap: 14px;
-    max-width: 100%;
-    min-width: 0;
-  }
-
-  /* 메뉴 항목은 줄바꿈 없이 가로 스크롤 */
-  .menu > a,
-  .menu .dropbtn{
-    flex: 0 0 auto;
-    display: inline-block;
-  }
-}
-
-/* ===== Force a 2-row nav layout on small screens (no HTML change) ===== */
 @media (max-width: 768px){
   /* Make the nav container a 2-row grid */
   .nav-inner{
@@ -479,6 +376,7 @@ main section .caption p {
     margin: 2px 0 4px;
     font-size: 16px;
     white-space: nowrap; /* prevent wrapping in the title itself */
+    text-align: center;
   }
 
   /* Menu occupies full width on row 2 and can scroll horizontally */
@@ -515,5 +413,10 @@ main section .caption p {
   .nav-title{ display: none !important; }
 }
 
-
-
+/* =========================================================
+   MOBILE-ONLY TWEAKS FOR SUBNAV HEADING
+   - Kept from original; placed at the end near other media rules
+   ========================================================= */
+@media (max-width:480px){
+  .subnav h1 { font-size: 22px; }
+}
