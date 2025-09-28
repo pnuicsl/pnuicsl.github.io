@@ -1,6 +1,5 @@
 /* =========================================================
    THEME TOKENS
-   - Global color variables reused across the site
    ========================================================= */
 :root {
   --fg:#0f172a;
@@ -11,7 +10,6 @@
 
 /* =========================================================
    GLOBAL RESET & BASE
-   - Normalize box model and basic typography
    ========================================================= */
 * { box-sizing: border-box; }
 
@@ -30,9 +28,6 @@ html { -webkit-text-size-adjust: 100%; }
 
 /* =========================================================
    NAVIGATION BAR
-   - Note: 'position: sticky' is followed by 'position: relative'
-     in the original. The latter wins, so the bar is not sticky.
-     Kept as-is to preserve current behavior.
    ========================================================= */
 .nav {
   position: sticky;          /* overridden by the next line */
@@ -70,7 +65,6 @@ html { -webkit-text-size-adjust: 100%; }
 
 /* =========================================================
    DROPDOWN
-   - Button, caret, container, and menu behaviors
    ========================================================= */
 .dropbtn {
   background: transparent;
@@ -81,6 +75,7 @@ html { -webkit-text-size-adjust: 100%; }
   display: flex;
   align-items: center;
   gap: 6px;
+  touch-action: manipulation; /* improve tap responsiveness on mobile */
 }
 
 .caret {
@@ -93,7 +88,7 @@ html { -webkit-text-size-adjust: 100%; }
 
 .dropdown { position: relative; }
 
-/* Hidden by default; toggled via .dropdown.open */
+/* default hidden */
 .dropdown-menu {
   position: absolute;
   right: 0;
@@ -108,7 +103,12 @@ html { -webkit-text-size-adjust: 100%; }
   z-index: 1000;
 }
 
+/* JS toggle (kept) */
 .dropdown.open .dropdown-menu { display: block; }
+
+/* CSS fallback: works without JS as well (hover/focus) */
+.dropdown:hover .dropdown-menu,
+.dropdown:focus-within .dropdown-menu { display: block; }
 
 .dropdown-menu a {
   display: block;
@@ -116,11 +116,10 @@ html { -webkit-text-size-adjust: 100%; }
   border-radius: 6px;
   color: var(--fg);
 }
-
 .dropdown-menu a:hover { background: #f3f4f6; }
 
 /* =========================================================
-   HERO / INTRO (Generic heading container)
+   HERO / INTRO
    ========================================================= */
 .hero {
   max-width: 1100px;
@@ -128,28 +127,20 @@ html { -webkit-text-size-adjust: 100%; }
   padding: 0 16px;
   text-align: center;
 }
+h1 { font-size: 42px; margin: 10px 0 12px; }
 
-h1 {
-  font-size: 42px;
-  margin: 10px 0 12px;
-}
-
-/* ---------------------------------------------------------
-   .lead (MERGED)
-   - Consolidated from two separate .lead blocks in the original.
-   - Keeps font-size from the first and layout/typography from the second.
-   --------------------------------------------------------- */
+/* .lead (merged) */
 .lead {
-  font-size: 18px;        /* from the first .lead */
-  max-width: 920px;       /* from the second .lead */
-  color: #475569;         /* from the second .lead (instead of --muted) */
-  line-height: 1.6;       /* from the second .lead */
-  text-align: center;     /* from the second .lead */
-  margin: 0 auto;         /* unified centering (no extra bottom margin) */
+  font-size: 18px;
+  max-width: 920px;
+  color: #475569;
+  line-height: 1.6;
+  text-align: center;
+  margin: 0 auto;
 }
 
 /* =========================================================
-   MISCELLANEOUS UI
+   MISC UI
    ========================================================= */
 .pill {
   display: inline-block;
@@ -159,7 +150,6 @@ h1 {
   color: #334155;
   font-size: 14px;
 }
-
 footer {
   border-top: 1px solid #e5e7eb;
   padding: 24px 16px;
@@ -167,17 +157,12 @@ footer {
   color: var(--muted);
 }
 
-/* ---------------------------------------------------------
-   .container (MERGED)
-   - Defined twice in the original; the later rule effectively won.
-   - Using the effective values here.
-   --------------------------------------------------------- */
+/* .container (merged) */
 .container {
   max-width: 1100px;
-  margin: 0 auto;     /* later rule’s value */
-  padding: 0 24px;    /* later rule’s value */
+  margin: 0 auto;
+  padding: 0 24px;
 }
-
 .back { color: #334155; }
 
 /* =========================================================
@@ -191,7 +176,6 @@ footer {
   grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
   gap: 14px;
 }
-
 .card {
   border: 1px solid #e5e7eb;
   border-radius: 14px;
@@ -200,13 +184,12 @@ footer {
 }
 
 /* =========================================================
-   INTRO SECTION (Page-specific visuals)
+   INTRO SECTION (page-specific visuals)
    ========================================================= */
 .intro .frame {
   background: radial-gradient(1200px 600px at 50% 30%,#ffffff 0%,#f8fafc 60%,#f1f5f9 100%);
   border: 1px solid #e2e8f0;
 }
-
 .intro .inner {
   display: grid;
   place-items: center;
@@ -214,20 +197,14 @@ footer {
   padding: 40px 32px;
   transform: translateY(-20px);
 }
-
 .intro h1 {
   font-size: clamp(32px,5vw,44px);
   letter-spacing: .2px;
   color: #0f172a;
 }
-
 .badges {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
 }
-
 .badges .pill {
   padding: 6px 10px;
   border: 1px solid #e2e8f0;
@@ -241,7 +218,6 @@ footer {
    GENERIC SECTION LAYOUT
    ========================================================= */
 .section { padding: 64px 0; }
-
 .h-title {
   font-size: clamp(28px,5vw,42px);
   font-weight: 800;
@@ -250,7 +226,6 @@ footer {
   text-align: left;
   color: #0f172a;
 }
-
 .lead-left {
   max-width: 980px;
   line-height: 1.7;
@@ -263,22 +238,13 @@ footer {
 /* =========================================================
    BULLET LIST
    ========================================================= */
-.bullets {
-  list-style: none;
-  padding: 0;
-  margin: 18px 0 0;
-}
-
+.bullets { list-style: none; padding: 0; margin: 18px 0 0; }
 .bullets li {
   margin: 10px 0;
   font-weight: 800;
   font-size: clamp(15px,2vw,20px);
 }
-
-.bullets li::before {
-  content: "– ";
-  font-weight: 800;
-}
+.bullets li::before { content: "– "; font-weight: 800; }
 
 /* =========================================================
    MISC TEXT BLOCKS
@@ -289,151 +255,106 @@ footer {
   color: #1f2937;
   font-family: "Segoe UI",Arial,sans-serif;
 }
-
 .mail span:first-child {
-  font-weight: 600;
-  margin-right: 6px;
-  color: #2563eb;
+  font-weight: 600; margin-right: 6px; color: #2563eb;
 }
-
 .career {
   margin: 4px 0 14px;
-  font-size: 13px;
-  line-height: 1.5;
-  color: #374151;
+  font-size: 13px; line-height: 1.5; color: #374151;
   font-family: "Arial",sans-serif;
   max-width: 800px;
 }
-
 .career span { display: block; }
 
 /* =========================================================
    SCROLL HINT
    ========================================================= */
-.scroll-hint {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  color: #64748b;
-}
-
-.bounce {
-  display: inline-block;
-  font-size: 20px;
-  animation: bounce 1.2s ease-in-out infinite;
-}
-
-@keyframes bounce {
-  0%,100% { transform: translateY(0); }
-  50%     { transform: translateY(15px); }
-}
+.scroll-hint { display: flex; gap: 6px; align-items: center; color: #64748b; }
+.bounce { display: inline-block; font-size: 20px; animation: bounce 1.2s ease-in-out infinite; }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(15px); } }
 
 /* =========================================================
    CAPTION TYPOGRAPHY (Fluid on mobile)
-   - Keeps text readable over images by scaling with viewport
-   - '!important' used to override page-local styles if present.
    ========================================================= */
-main section .caption h2 {
-  font-size: clamp(16px, 4.2vw, 24px) !important;
-}
+main section .caption h2 { font-size: clamp(16px, 4.2vw, 24px) !important; }
+main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-height: 1.45; }
 
-main section .caption p {
-  font-size: clamp(11px, 3.4vw, 18px) !important;
-  line-height: 1.45;
-}
-
-/* Tighter lower bound on very small screens (≤ 360px) */
 @media (max-width: 360px){
-  main section .caption p {
-    font-size: clamp(10px, 3.6vw, 14px) !important;
-  }
+  main section .caption p { font-size: clamp(10px, 3.6vw, 14px) !important; }
 }
 
 /* =========================================================
-   RESPONSIVE: NAVIGATION (Consolidated)
-   - Single, deterministic approach: grid 2-row layout
-   - Removes conflicts from previous multiple strategies
+   RESPONSIVE: NAVIGATION (single source of truth)
+   - Two-row grid nav; dropdown not clipped; CSS fallback enabled
    ========================================================= */
 @media (max-width: 768px){
-  /* Make the nav container a 2-row grid */
+  /* 2-row grid */
   .nav-inner{
     display: grid !important;
-    grid-template-columns: 1fr auto 1fr; /* left spacer | title | right spacer */
+    grid-template-columns: 1fr auto 1fr; /* spacer | title | spacer */
     grid-template-rows: auto auto;       /* row1: title, row2: menu */
     align-items: center;
     row-gap: 6px;
+    overflow: visible;                    /* ensure dropdown can escape */
   }
 
-  /* Title centered on row 1 (stop being absolute) */
+  /* title on row 1, centered */
   .nav-title{
     position: static !important;
     transform: none !important;
-    grid-column: 2;   /* center column */
+    grid-column: 2;
     grid-row: 1;
     justify-self: center;
     width: auto;
     line-height: 1.2;
     margin: 2px 0 4px;
     font-size: 16px;
-    white-space: nowrap; /* prevent wrapping in the title itself */
+    white-space: nowrap;
     text-align: center;
+    pointer-events: none;
   }
 
-  /* Menu occupies full width on row 2 and can scroll horizontally */
+  /* menu on row 2; horizontal scroll */
   .menu{
-    grid-column: 1 / -1; /* span all 3 columns */
+    grid-column: 1 / -1;
     grid-row: 2;
     justify-self: start;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: visible;                 /* ← critical: prevent clipping */
     -webkit-overflow-scrolling: touch;
     white-space: nowrap;
     gap: 14px;
     max-width: 100%;
     min-width: 0;
-    padding-left: 20px; /* nudge start so it doesn't kiss the edge */
+    padding-left: 20px;
   }
 
-  .menu > a,
-  .menu .dropbtn{
-    flex: 0 0 auto;
-    display: inline-block;
+  /* dropdown positioning & layering */
+  .dropdown{ position: relative; }
+  .dropdown-menu{
+    left: 0; right: auto;
+    top: calc(100% + 6px);
+    z-index: 9999;
   }
+
+  /* fallback remains active on mobile too */
+  .dropdown:hover .dropdown-menu,
+  .dropdown:focus-within .dropdown-menu { display: block; }
 }
 
-/* Extra-tight phones: give a bit more left padding and shrink text slightly */
+/* Extra-tight phones */
 @media (max-width: 420px){
   .menu{ padding-left: 24px; }
   .menu > a, .menu .dropbtn{ font-size: clamp(12px, 3.6vw, 14px); }
   .nav-title{ font-size: clamp(14px, 4vw, 16px); }
 }
 
-/* Last-resort fallback on very tiny screens: hide the title if still overlapping */
+/* Last resort: hide title on very tiny screens */
 @media (max-width: 360px){
   .nav-title{ display: none !important; }
 }
 
-/* =========================================================
-   MOBILE-ONLY TWEAKS FOR SUBNAV HEADING
-   - Kept from original; placed at the end near other media rules
-   ========================================================= */
+/* Subnav heading (kept) */
 @media (max-width:480px){
   .subnav h1 { font-size: 22px; }
 }
-
-/* === Mobile dropdown fix: prevent clipping by .menu on small screens === */
-@media (max-width: 768px){
-  /* 드롭다운이 세로로 펼쳐질 수 있도록 Y축 오버플로우를 보이게 */
-  .menu{
-    overflow-x: auto;
-    overflow-y: visible;        /* ← 기존 hidden을 해제 */
-  }
-
-  /* 드롭다운 층위와 간격 보강 */
-  .dropdown{ position: relative; }
-  .dropdown-menu{
-    top: calc(100% + 6px);      /* 버튼 바로 아래로 조금 띄워 표시 */
-    z-index: 9999;              /* 다른 요소 위에 올라오도록 */
-  }
-}
-
