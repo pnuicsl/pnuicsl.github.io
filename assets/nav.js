@@ -1,16 +1,20 @@
-/* /assets/nav.js — (previous working) pointer-based delegated dropdown
-   - Loads /partials/nav.html using script[data-base] as base
-   - Single 'pointerup' delegation (prevents touch/click double toggles)
-   - Never prevents default on links → menu item navigation works
-   - Close on outside tap/click, ESC, resize/orientation
-   - Sets --nav-height CSS var once (for mobile overlay positioning)
+/* /assets/nav.js
+   Lightweight, robust navbar loader + dropdown controller
+   - Loads /partials/nav.html (path is resolved from script[data-base])
+   - Works on desktop & mobile (single 'pointerup' delegation → no ghost clicks)
+   - Accessible: ARIA expanded state, keyboard open/close, ESC to close
+   - Closes when clicking outside, on resize, or orientation change
+   - Exposes no globals
 */
 (function () {
   "use strict";
 
-  // 1) Load nav.html into #site-nav
+  /** -------------------------------------------------------
+   * 1) Resolve base path and fetch nav.html into #site-nav
+   * ------------------------------------------------------*/
   const thisScript = document.currentScript;
   const baseAttr = (thisScript && thisScript.dataset && thisScript.dataset.base) || "";
+  // Normalize base to end with a single slash if present
   const base = baseAttr ? baseAttr.replace(/\/?$/, "/") : "";
   const navUrl = base + "partials/nav.html";
 
@@ -24,17 +28,34 @@
       if (!mount) return;
       mount.innerHTML = html;
 
-      // Set CSS var with current nav height (used by mobile overlay CSS)
-      const nav = mount.querySelector(".nav");
-      const navH = nav ? Math.round(nav.getBoundingClientRect().height) : 56;
-      document.documentElement.style.setProperty("--nav-height", navH + "px");
-
+      // After DOM is injected, wire handlers and sync CSS var for overlay position
+      updateNavHeight();
       wireDelegatedDropdowns();
+      // Keep --nav-height accurate on layout changes
+      window.addEventListener("resize", updateNavHeight);
+      window.addEventListener("orientationchange", updateNavHeight);
     })
     .catch(err => console.error("Nav load error:", err));
 
-  // 2) Dropdown logic: single 'pointerup' delegation
+  /** ---------------------------------------------
+   * Keep a CSS variable with current nav height.
+   * Used by mobile overlay CSS (if you use it).
+   * --------------------------------------------*/
+  function updateNavHeight() {
+    const nav = document.querySelector("#site-nav .nav");
+    const h = nav ? Math.round(nav.getBoundingClientRect().height) : 56;
+    document.documentElement.style.setProperty("--nav-height", h + "px");
+  }
+
+  /** -------------------------------------------------------
+   * 2) Dropdown logic (delegated, pointer-based, accessible)
+   * ------------------------------------------------------*/
   function wireDelegatedDropdowns() {
+    // Avoid double-wiring if this script runs twice
+    if (document.documentElement.__navWired) return;
+    document.documentElement.__navWired = true;
+
+    // Helpers
     const setExpanded = (dd, open) => {
       dd.classList.toggle("open", open);
       const btn = dd.querySelector(".dropbtn");
@@ -51,37 +72,41 @@
       });
     };
 
-    // A) Open/close via pointer (covers mobile + desktop without ghost clicks)
-    document.addEventListener("pointerup", function (e) {
-      // 1) Toggle when tapping the button
-      const btn = e.target.closest && e.target.closest(".dropbtn");
-      if (btn) {
-        e.preventDefault();   // button default not needed
-        e.stopPropagation();
-        const dd = btn.closest(".dropdown");
-        if (!dd) return;
-        const willOpen = !dd.classList.contains("open");
-        closeAll(dd);
-        setExpanded(dd, willOpen);
-        return;
-      }
+    // A) Single pointer handler for open/close (prevents touch+click double toggles)
+    document.addEventListener(
+      "pointerup",
+      function (e) {
+        const btn = e.target.closest(".dropbtn");
+        if (btn) {
+          // Toggle the parent .dropdown
+          e.preventDefault();   // .dropbtn is a button; we don't want default click actions
+          e.stopPropagation();
+          const dd = btn.closest(".dropdown");
+          if (!dd) return;
+          const willOpen = !dd.classList.contains("open");
+          closeAll(dd);
+          setExpanded(dd, willOpen);
+          return;
+        }
 
-      // 2) Clicking a menu item: close menu, allow navigation
-      const link = e.target.closest && e.target.closest(".dropdown-menu a");
-      if (link) {
-        const dd = link.closest(".dropdown");
-        if (dd) setExpanded(dd, false);
-        return; // do NOT preventDefault → navigate
-      }
+        // If a dropdown item (link) was tapped: close the menu but DO NOT block navigation
+        const item = e.target.closest(".dropdown-menu a");
+        if (item) {
+          const dd = item.closest(".dropdown");
+          if (dd) setExpanded(dd, false);
+          return; // let the link navigate
+        }
 
-      // 3) Tap outside: close all
-      if (!e.target.closest(".dropdown")) closeAll();
-    }, true); // capture phase → more reliable on mobile
+        // Tap/click outside any dropdown → close all
+        if (!e.target.closest(".dropdown")) closeAll();
+      },
+      true // capture phase to win over other handlers
+    );
 
-    // B) Keyboard accessibility
+    // B) Keyboard accessibility: Enter/Space to toggle, ESC to close
     document.addEventListener("keydown", function (e) {
-      const isBtn = e.target && e.target.closest && e.target.closest(".dropbtn");
-      if ((e.key === "Enter" || e.key === " ") && isBtn) {
+      const isActivator = e.target && e.target.closest && e.target.closest(".dropbtn");
+      if ((e.key === "Enter" || e.key === " ") && isActivator) {
         e.preventDefault();
         const dd = e.target.closest(".dropdown");
         if (!dd) return;
@@ -92,7 +117,7 @@
       if (e.key === "Escape") closeAll();
     });
 
-    // C) Close on viewport change
+    // C) Auto-close on viewport changes
     window.addEventListener("resize", () => closeAll());
     window.addEventListener("orientationchange", () => closeAll());
   }
