@@ -456,5 +456,64 @@ main section .caption p {
   }
 }
 
+/* ===== Force a 2-row nav layout on small screens (no HTML change) ===== */
+@media (max-width: 768px){
+  /* Make the nav container a 2-row grid */
+  .nav-inner{
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr; /* left spacer | title | right spacer */
+    grid-template-rows: auto auto;       /* row1: title, row2: menu */
+    align-items: center;
+    row-gap: 6px;
+  }
+
+  /* Title centered on row 1 (stop being absolute) */
+  .nav-title{
+    position: static !important;
+    transform: none !important;
+    grid-column: 2;   /* center column */
+    grid-row: 1;
+    justify-self: center;
+    width: auto;
+    line-height: 1.2;
+    margin: 2px 0 4px;
+    font-size: 16px;
+    white-space: nowrap; /* prevent wrapping in the title itself */
+  }
+
+  /* Menu occupies full width on row 2 and can scroll horizontally */
+  .menu{
+    grid-column: 1 / -1; /* span all 3 columns */
+    grid-row: 2;
+    justify-self: start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    gap: 14px;
+    max-width: 100%;
+    min-width: 0;
+    padding-left: 20px; /* nudge start so it doesn't kiss the edge */
+  }
+
+  .menu > a,
+  .menu .dropbtn{
+    flex: 0 0 auto;
+    display: inline-block;
+  }
+}
+
+/* Extra-tight phones: give a bit more left padding and shrink text slightly */
+@media (max-width: 420px){
+  .menu{ padding-left: 24px; }
+  .menu > a, .menu .dropbtn{ font-size: clamp(12px, 3.6vw, 14px); }
+  .nav-title{ font-size: clamp(14px, 4vw, 16px); }
+}
+
+/* Last-resort fallback on very tiny screens: hide the title if still overlapping */
+@media (max-width: 360px){
+  .nav-title{ display: none !important; }
+}
+
 
 
