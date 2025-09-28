@@ -362,11 +362,11 @@ footer {
      from page-local styles if present.
    ========================================================= */
 main section .caption h2 {
-  font-size: clamp(16px, 4.2vw, 22px) !important;
+  font-size: clamp(16px, 4.2vw, 24px) !important;
 }
 
 main section .caption p {
-  font-size: clamp(11px, 3.4vw, 15px) !important;
+  font-size: clamp(11px, 3.4vw, 18px) !important;
   line-height: 1.45;
 }
 
@@ -384,3 +384,4 @@ main section .caption p {
 @media (max-width:480px){
   .subnav h1 { font-size: 22px; }
 }
+
