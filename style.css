@@ -299,22 +299,18 @@ footer {
   }
 }
 
-/* Caption text scales with viewport width */
-.caption h2 {
-  /* 최소 18px, 보통은 3.8vw, 최대 22px */
-  font-size: clamp(18px, 3.8vw, 22px);
+/* iOS 사파리 자동 글자 키우기 방지(권장) */
+html { -webkit-text-size-adjust: 100%; }
+
+/* 캡션 제목/본문을 뷰포트에 맞춰 유동형으로 */
+main section .caption h2 { font-size: clamp(16px, 4.2vw, 22px) !important; }
+main section .caption p  { font-size: clamp(11px, 3.4vw, 15px) !important; line-height: 1.45; }
+
+/* 매우 작은 화면(≤360px)에서는 더 타이트하게 */
+@media (max-width: 360px){
+  main section .caption p { font-size: clamp(10px, 3.6vw, 14px) !important; }
 }
 
-.caption p {
-  /* 최소 13px, 보통은 3.2vw, 최대 15px */
-  font-size: clamp(13px, 3.2vw, 15px);
-  line-height: 1.5; /* 가독성 확보 */
-}
-
-/* 아주 작은 화면에서 조금 더 촘촘하게 */
-@media (max-width: 480px) {
-  .caption p { line-height: 1.4; }
-}
 
 
 
