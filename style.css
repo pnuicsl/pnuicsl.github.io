@@ -420,3 +420,20 @@ main section .caption p {
 @media (max-width:480px){
   .subnav h1 { font-size: 22px; }
 }
+
+/* === Mobile dropdown fix: prevent clipping by .menu on small screens === */
+@media (max-width: 768px){
+  /* 드롭다운이 세로로 펼쳐질 수 있도록 Y축 오버플로우를 보이게 */
+  .menu{
+    overflow-x: auto;
+    overflow-y: visible;        /* ← 기존 hidden을 해제 */
+  }
+
+  /* 드롭다운 층위와 간격 보강 */
+  .dropdown{ position: relative; }
+  .dropdown-menu{
+    top: calc(100% + 6px);      /* 버튼 바로 아래로 조금 띄워 표시 */
+    z-index: 9999;              /* 다른 요소 위에 올라오도록 */
+  }
+}
+
