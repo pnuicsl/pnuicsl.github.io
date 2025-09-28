@@ -385,3 +385,41 @@ main section .caption p {
   .subnav h1 { font-size: 22px; }
 }
 
+@media (max-width: 768px){
+  /* nav 전체를 줄바꿈 가능하게 */
+  .nav-inner{
+    flex-wrap: wrap;     /* 2줄 배치 허용 */
+    row-gap: 6px;        /* 줄 간격 */
+  }
+
+  /* 가운데 고정된 타이틀을 일반 흐름으로 */
+  .nav-title{
+    position: static;    /* absolute 해제 */
+    transform: none;     /* 가운데 이동 해제 */
+    width: 100%;         /* 한 줄 전체 차지 */
+    text-align: center;
+    line-height: 1.2;
+    margin: 2px 0 4px;
+    font-size: 16px;     /* 조금 작게 */
+  }
+
+  /* 메뉴는 한 줄 가로 스크롤 허용(이미 일부 설정 있으나 보강) */
+  .menu{
+    order: 2;           /* 타이틀 아래로 배치 */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    gap: 14px;
+    max-width: 100%;
+    min-width: 0;       /* flex 항목이 줄어들 수 있도록 */
+  }
+
+  /* 메뉴 항목은 줄바꿈 없이 가로 스크롤에 맞춤 */
+  .menu > a,
+  .menu .dropbtn{
+    flex: 0 0 auto;
+    display: inline-block;
+  }
+}
+
