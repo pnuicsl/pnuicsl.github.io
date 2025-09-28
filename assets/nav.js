@@ -1,20 +1,16 @@
-/* /assets/nav.js
-   Lightweight, robust navbar loader + dropdown controller
-   - Loads /partials/nav.html (path is resolved from script[data-base])
-   - Works on desktop & mobile (single 'pointerup' delegation → no ghost clicks)
-   - Accessible: ARIA expanded state, keyboard open/close, ESC to close
-   - Closes when clicking outside, on resize, or orientation change
-   - Exposes no globals
+/* /assets/nav.js — pointer-based dropdown (links left to default navigation)
+   - Loads /partials/nav.html via script[data-base]
+   - Button toggle: pointerup(모바일/데스크톱) + 키보드 접근성
+   - 링크(a)는 절대 가로막지 않음( preventDefault / stopPropagation 안 함 )
+   - 바깥 클릭/ESC/리사이즈/회전 시 닫기
+   - --nav-height CSS 변수 갱신(모바일 오버레이 위치)
 */
 (function () {
   "use strict";
 
-  /** -------------------------------------------------------
-   * 1) Resolve base path and fetch nav.html into #site-nav
-   * ------------------------------------------------------*/
+  // 1) Load nav.html into #site-nav
   const thisScript = document.currentScript;
   const baseAttr = (thisScript && thisScript.dataset && thisScript.dataset.base) || "";
-  // Normalize base to end with a single slash if present
   const base = baseAttr ? baseAttr.replace(/\/?$/, "/") : "";
   const navUrl = base + "partials/nav.html";
 
@@ -28,34 +24,22 @@
       if (!mount) return;
       mount.innerHTML = html;
 
-      // After DOM is injected, wire handlers and sync CSS var for overlay position
       updateNavHeight();
-      wireDelegatedDropdowns();
-      // Keep --nav-height accurate on layout changes
+      wireDropdowns();
+
       window.addEventListener("resize", updateNavHeight);
       window.addEventListener("orientationchange", updateNavHeight);
     })
     .catch(err => console.error("Nav load error:", err));
 
-  /** ---------------------------------------------
-   * Keep a CSS variable with current nav height.
-   * Used by mobile overlay CSS (if you use it).
-   * --------------------------------------------*/
   function updateNavHeight() {
     const nav = document.querySelector("#site-nav .nav");
     const h = nav ? Math.round(nav.getBoundingClientRect().height) : 56;
     document.documentElement.style.setProperty("--nav-height", h + "px");
   }
 
-  /** -------------------------------------------------------
-   * 2) Dropdown logic (delegated, pointer-based, accessible)
-   * ------------------------------------------------------*/
-  function wireDelegatedDropdowns() {
-    // Avoid double-wiring if this script runs twice
-    if (document.documentElement.__navWired) return;
-    document.documentElement.__navWired = true;
-
-    // Helpers
+  // 2) Dropdown logic (single 'pointerup' delegation for buttons)
+  function wireDropdowns() {
     const setExpanded = (dd, open) => {
       dd.classList.toggle("open", open);
       const btn = dd.querySelector(".dropbtn");
@@ -72,41 +56,29 @@
       });
     };
 
-    // A) Single pointer handler for open/close (prevents touch+click double toggles)
-    document.addEventListener(
-      "pointerup",
-      function (e) {
-        const btn = e.target.closest(".dropbtn");
-        if (btn) {
-          // Toggle the parent .dropdown
-          e.preventDefault();   // .dropbtn is a button; we don't want default click actions
-          e.stopPropagation();
-          const dd = btn.closest(".dropdown");
-          if (!dd) return;
-          const willOpen = !dd.classList.contains("open");
-          closeAll(dd);
-          setExpanded(dd, willOpen);
-          return;
-        }
+    // 버튼만 처리: 링크는 건드리지 않습니다(네비게이션 100% 보장)
+    document.addEventListener("pointerup", function (e) {
+      const btn = e.target.closest && e.target.closest(".dropbtn");
+      if (btn) {
+        e.preventDefault();   // 버튼의 기본 클릭 동작은 필요 없음
+        e.stopPropagation();
+        const dd = btn.closest(".dropdown");
+        if (!dd) return;
+        const willOpen = !dd.classList.contains("open");
+        closeAll(dd);
+        setExpanded(dd, willOpen);
+        return;
+      }
 
-        // If a dropdown item (link) was tapped: close the menu but DO NOT block navigation
-        const item = e.target.closest(".dropdown-menu a");
-        if (item) {
-          const dd = item.closest(".dropdown");
-          if (dd) setExpanded(dd, false);
-          return; // let the link navigate
-        }
+      // 바깥 탭 → 모두 닫기
+      if (!e.target.closest(".dropdown")) closeAll();
+      // 링크(a)는 여기서 일절 처리하지 않음 → 클릭 이벤트가 정상적으로 페이지 이동 처리
+    }, true);
 
-        // Tap/click outside any dropdown → close all
-        if (!e.target.closest(".dropdown")) closeAll();
-      },
-      true // capture phase to win over other handlers
-    );
-
-    // B) Keyboard accessibility: Enter/Space to toggle, ESC to close
+    // 키보드 접근성
     document.addEventListener("keydown", function (e) {
-      const isActivator = e.target && e.target.closest && e.target.closest(".dropbtn");
-      if ((e.key === "Enter" || e.key === " ") && isActivator) {
+      const isBtn = e.target && e.target.closest && e.target.closest(".dropbtn");
+      if ((e.key === "Enter" || e.key === " ") && isBtn) {
         e.preventDefault();
         const dd = e.target.closest(".dropdown");
         if (!dd) return;
@@ -117,7 +89,7 @@
       if (e.key === "Escape") closeAll();
     });
 
-    // C) Auto-close on viewport changes
+    // 화면 변화 시 닫기
     window.addEventListener("resize", () => closeAll());
     window.addEventListener("orientationchange", () => closeAll());
   }
