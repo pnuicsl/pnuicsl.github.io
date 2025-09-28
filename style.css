@@ -298,3 +298,22 @@ footer {
     top: 100%;
   }
 }
+
+/* Caption text scales with viewport width */
+.caption h2 {
+  /* 최소 18px, 보통은 3.8vw, 최대 22px */
+  font-size: clamp(18px, 3.8vw, 22px);
+}
+
+.caption p {
+  /* 최소 13px, 보통은 3.2vw, 최대 15px */
+  font-size: clamp(13px, 3.2vw, 15px);
+  line-height: 1.5; /* 가독성 확보 */
+}
+
+/* 아주 작은 화면에서 조금 더 촘촘하게 */
+@media (max-width: 480px) {
+  .caption p { line-height: 1.4; }
+}
+
+
