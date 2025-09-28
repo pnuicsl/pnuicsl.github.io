@@ -396,6 +396,7 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
 @media (max-width: 420px){
   .prof-name .ext-link{ font-size: 12px; }
 }
+.menu a.active{ font-weight:700; border-bottom:2px solid var(--link); }
 
 
 
