@@ -1,20 +1,14 @@
-/* /assets/nav.js
-   Lightweight, robust navbar loader + dropdown controller
-   - Loads /partials/nav.html (path is resolved from script[data-base])
-   - Works on desktop & mobile (single 'pointerup' delegation → no ghost clicks)
-   - Accessible: ARIA expanded state, keyboard open/close, ESC to close
-   - Closes when clicking outside, on resize, or orientation change
-   - Exposes no globals
+/* Robust navbar loader + dropdown (desktop & mobile)
+   - Loads /partials/nav.html (base from script[data-base])
+   - Delegated handlers: pointerup + touchend + click (with ghost-click suppression)
+   - ARIA expanded, outside click close, ESC close, resize/orientation close
 */
 (function () {
   "use strict";
 
-  /** -------------------------------------------------------
-   * 1) Resolve base path and fetch nav.html into #site-nav
-   * ------------------------------------------------------*/
+  // 1) Load nav.html
   const thisScript = document.currentScript;
   const baseAttr = (thisScript && thisScript.dataset && thisScript.dataset.base) || "";
-  // Normalize base to end with a single slash if present
   const base = baseAttr ? baseAttr.replace(/\/?$/, "/") : "";
   const navUrl = base + "partials/nav.html";
 
@@ -28,40 +22,30 @@
       if (!mount) return;
       mount.innerHTML = html;
 
-      // After DOM is injected, wire handlers and sync CSS var for overlay position
+      // Keep a CSS var with the nav height for mobile overlay positioning
       updateNavHeight();
       wireDelegatedDropdowns();
-      // Keep --nav-height accurate on layout changes
       window.addEventListener("resize", updateNavHeight);
       window.addEventListener("orientationchange", updateNavHeight);
     })
     .catch(err => console.error("Nav load error:", err));
 
-  /** ---------------------------------------------
-   * Keep a CSS variable with current nav height.
-   * Used by mobile overlay CSS (if you use it).
-   * --------------------------------------------*/
   function updateNavHeight() {
     const nav = document.querySelector("#site-nav .nav");
     const h = nav ? Math.round(nav.getBoundingClientRect().height) : 56;
     document.documentElement.style.setProperty("--nav-height", h + "px");
   }
 
-  /** -------------------------------------------------------
-   * 2) Dropdown logic (delegated, pointer-based, accessible)
-   * ------------------------------------------------------*/
+  // 2) Dropdown logic (delegated)
   function wireDelegatedDropdowns() {
-    // Avoid double-wiring if this script runs twice
     if (document.documentElement.__navWired) return;
     document.documentElement.__navWired = true;
 
-    // Helpers
     const setExpanded = (dd, open) => {
       dd.classList.toggle("open", open);
       const btn = dd.querySelector(".dropbtn");
       if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
     };
-
     const closeAll = (except = null) => {
       document.querySelectorAll(".dropdown.open").forEach(d => {
         if (d !== except) {
@@ -72,52 +56,91 @@
       });
     };
 
-    // A) Single pointer handler for open/close (prevents touch+click double toggles)
-    document.addEventListener(
-      "pointerup",
-      function (e) {
-        const btn = e.target.closest(".dropbtn");
-        if (btn) {
-          // Toggle the parent .dropdown
-          e.preventDefault();   // .dropbtn is a button; we don't want default click actions
-          e.stopPropagation();
-          const dd = btn.closest(".dropdown");
-          if (!dd) return;
-          const willOpen = !dd.classList.contains("open");
-          closeAll(dd);
-          setExpanded(dd, willOpen);
-          return;
-        }
+    // Ghost click suppression window
+    let lastTouchTs = 0;
 
-        // If a dropdown item (link) was tapped: close the menu but DO NOT block navigation
-        const item = e.target.closest(".dropdown-menu a");
-        if (item) {
-          const dd = item.closest(".dropdown");
-          if (dd) setExpanded(dd, false);
-          return; // let the link navigate
-        }
+    function activateFromBtn(btn, e) {
+      // Toggle the parent .dropdown
+      const dd = btn.closest(".dropdown");
+      if (!dd) return;
+      const willOpen = !dd.classList.contains("open");
+      closeAll(dd);
+      setExpanded(dd, willOpen);
+    }
 
-        // Tap/click outside any dropdown → close all
-        if (!e.target.closest(".dropdown")) closeAll();
-      },
-      true // capture phase to win over other handlers
-    );
+    // --- pointerup (primary path on modern browsers)
+    document.addEventListener("pointerup", function (e) {
+      const btn = e.target.closest && e.target.closest(".dropbtn");
+      const link = e.target.closest && e.target.closest(".dropdown-menu a");
 
-    // B) Keyboard accessibility: Enter/Space to toggle, ESC to close
-    document.addEventListener("keydown", function (e) {
-      const isActivator = e.target && e.target.closest && e.target.closest(".dropbtn");
-      if ((e.key === "Enter" || e.key === " ") && isActivator) {
+      if (btn) {
+        e.preventDefault();   // .dropbtn default is not needed
+        e.stopPropagation();
+        activateFromBtn(btn, e);
+        return;
+      }
+      if (link) {
+        // Close menu but DO NOT block navigation
+        const dd = link.closest(".dropdown");
+        if (dd) setExpanded(dd, false);
+        return;
+      }
+      if (!e.target.closest(".dropdown")) closeAll();
+    }, true); // capture to win over other handlers
+
+    // --- touchend (fallback for iOS variants where pointer may be flaky)
+    document.addEventListener("touchend", function (e) {
+      lastTouchTs = Date.now();
+      const btn = e.target.closest && e.target.closest(".dropbtn");
+      const link = e.target.closest && e.target.closest(".dropdown-menu a");
+
+      if (btn) {
         e.preventDefault();
-        const dd = e.target.closest(".dropdown");
-        if (!dd) return;
-        const willOpen = !dd.classList.contains("open");
-        closeAll(dd);
-        setExpanded(dd, willOpen);
+        e.stopPropagation();
+        activateFromBtn(btn, e);
+        return;
+      }
+      if (link) {
+        const dd = link.closest(".dropdown");
+        if (dd) setExpanded(dd, false);
+        return; // let link navigate
+      }
+      if (!e.target.closest(".dropdown")) closeAll();
+    }, { passive: false, capture: true });
+
+    // --- click (fallback for devices without pointer/touch or desktop)
+    document.addEventListener("click", function (e) {
+      // Ignore synthetic clicks right after a touch
+      if (Date.now() - lastTouchTs < 500) return;
+
+      const btn = e.target.closest && e.target.closest(".dropbtn");
+      const link = e.target.closest && e.target.closest(".dropdown-menu a");
+
+      if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        activateFromBtn(btn, e);
+        return;
+      }
+      if (link) {
+        const dd = link.closest(".dropdown");
+        if (dd) setExpanded(dd, false);
+        return;
+      }
+      if (!e.target.closest(".dropdown")) closeAll();
+    }, true);
+
+    // Keyboard accessibility
+    document.addEventListener("keydown", function (e) {
+      const isBtn = e.target && e.target.closest && e.target.closest(".dropbtn");
+      if ((e.key === "Enter" || e.key === " ") && isBtn) {
+        e.preventDefault();
+        activateFromBtn(e.target.closest(".dropbtn"), e);
       }
       if (e.key === "Escape") closeAll();
     });
 
-    // C) Auto-close on viewport changes
+    // Close on viewport change
     window.addEventListener("resize", () => closeAll());
     window.addEventListener("orientationchange", () => closeAll());
   }
