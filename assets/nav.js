@@ -1,12 +1,14 @@
-/* Robust navbar loader + dropdown (desktop & mobile)
-   - Loads /partials/nav.html (base from script[data-base])
-   - Delegated handlers: pointerup + touchend + click (with ghost-click suppression)
-   - ARIA expanded, outside click close, ESC close, resize/orientation close
+/* /assets/nav.js
+   Minimal & robust navbar loader + dropdown (desktop & mobile)
+   - Loads /partials/nav.html (path from script[data-base])
+   - Single 'click' delegation (no touch/pointer complexity)
+   - Never prevents default on links -> menu selection always navigates
+   - Close on outside click, ESC, resize/orientation
 */
 (function () {
   "use strict";
 
-  // 1) Load nav.html
+  // 1) Load nav.html into #site-nav
   const thisScript = document.currentScript;
   const baseAttr = (thisScript && thisScript.dataset && thisScript.dataset.base) || "";
   const base = baseAttr ? baseAttr.replace(/\/?$/, "/") : "";
@@ -22,11 +24,13 @@
       if (!mount) return;
       mount.innerHTML = html;
 
-      // Keep a CSS var with the nav height for mobile overlay positioning
+      // Keep nav height CSS var for mobile overlay positioning (used in CSS)
       updateNavHeight();
-      wireDelegatedDropdowns();
       window.addEventListener("resize", updateNavHeight);
       window.addEventListener("orientationchange", updateNavHeight);
+
+      // Wire dropdowns via delegated click handlers
+      wireDropdowns(mount);
     })
     .catch(err => console.error("Nav load error:", err));
 
@@ -36,112 +40,74 @@
     document.documentElement.style.setProperty("--nav-height", h + "px");
   }
 
-  // 2) Dropdown logic (delegated)
-  function wireDelegatedDropdowns() {
-    if (document.documentElement.__navWired) return;
-    document.documentElement.__navWired = true;
+  // 2) Dropdown logic (single 'click' delegation)
+  function wireDropdowns(root) {
+    // Avoid double wiring if the script gets executed twice
+    if (root.__wired) return;
+    root.__wired = true;
 
-    const setExpanded = (dd, open) => {
+    function setExpanded(dd, open) {
       dd.classList.toggle("open", open);
       const btn = dd.querySelector(".dropbtn");
       if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
-    };
-    const closeAll = (except = null) => {
-      document.querySelectorAll(".dropdown.open").forEach(d => {
+    }
+
+    function closeAll(except) {
+      root.querySelectorAll(".dropdown.open").forEach(d => {
         if (d !== except) {
           d.classList.remove("open");
           const b = d.querySelector(".dropbtn");
           if (b) b.setAttribute("aria-expanded", "false");
         }
       });
-    };
-
-    // Ghost click suppression window
-    let lastTouchTs = 0;
-
-    function activateFromBtn(btn, e) {
-      // Toggle the parent .dropdown
-      const dd = btn.closest(".dropdown");
-      if (!dd) return;
-      const willOpen = !dd.classList.contains("open");
-      closeAll(dd);
-      setExpanded(dd, willOpen);
     }
 
-    // --- pointerup (primary path on modern browsers)
-    document.addEventListener("pointerup", function (e) {
-      const btn = e.target.closest && e.target.closest(".dropbtn");
-      const link = e.target.closest && e.target.closest(".dropdown-menu a");
-
-      if (btn) {
-        e.preventDefault();   // .dropbtn default is not needed
-        e.stopPropagation();
-        activateFromBtn(btn, e);
-        return;
-      }
-      if (link) {
-        // Close menu but DO NOT block navigation
-        const dd = link.closest(".dropdown");
-        if (dd) setExpanded(dd, false);
-        return;
-      }
-      if (!e.target.closest(".dropdown")) closeAll();
-    }, true); // capture to win over other handlers
-
-    // --- touchend (fallback for iOS variants where pointer may be flaky)
-    document.addEventListener("touchend", function (e) {
-      lastTouchTs = Date.now();
-      const btn = e.target.closest && e.target.closest(".dropbtn");
-      const link = e.target.closest && e.target.closest(".dropdown-menu a");
-
-      if (btn) {
-        e.preventDefault();
-        e.stopPropagation();
-        activateFromBtn(btn, e);
-        return;
-      }
-      if (link) {
-        const dd = link.closest(".dropdown");
-        if (dd) setExpanded(dd, false);
-        return; // let link navigate
-      }
-      if (!e.target.closest(".dropdown")) closeAll();
-    }, { passive: false, capture: true });
-
-    // --- click (fallback for devices without pointer/touch or desktop)
+    // A) Click delegation (desktop & mobile 모두 동작)
     document.addEventListener("click", function (e) {
-      // Ignore synthetic clicks right after a touch
-      if (Date.now() - lastTouchTs < 500) return;
-
-      const btn = e.target.closest && e.target.closest(".dropbtn");
-      const link = e.target.closest && e.target.closest(".dropdown-menu a");
-
-      if (btn) {
-        e.preventDefault();
-        e.stopPropagation();
-        activateFromBtn(btn, e);
+      // 범위를 navbar 내부로 한정
+      const inNav = e.target.closest && e.target.closest("#site-nav");
+      if (!inNav) {
+        // 외부 클릭이면 열린 메뉴 닫기
+        closeAll();
         return;
       }
-      if (link) {
+
+      // 1) 버튼 클릭 → 토글 (다른 드롭다운은 닫기)
+      const btn = e.target.closest(".dropbtn");
+      if (btn && root.contains(btn)) {
+        e.stopPropagation(); // 바깥 닫기 핸들러와 충돌 방지
+        const dd = btn.closest(".dropdown");
+        const willOpen = !dd.classList.contains("open");
+        closeAll(dd);
+        setExpanded(dd, willOpen);
+        return; // 버튼은 링크가 아니므로 preventDefault 불필요
+      }
+
+      // 2) 메뉴 항목 클릭 → 닫기만, 네비게이션은 그대로 진행
+      const link = e.target.closest(".dropdown-menu a");
+      if (link && root.contains(link)) {
         const dd = link.closest(".dropdown");
         if (dd) setExpanded(dd, false);
+        // 링크 이동은 기본 동작으로 진행
         return;
       }
-      if (!e.target.closest(".dropdown")) closeAll();
-    }, true);
 
-    // Keyboard accessibility
+      // 3) navbar 내부 다른 영역 클릭 → 필요 시 닫기
+      const insideDropdown = e.target.closest(".dropdown");
+      if (!insideDropdown) closeAll();
+    });
+
+    // B) Keyboard accessibility
     document.addEventListener("keydown", function (e) {
       const isBtn = e.target && e.target.closest && e.target.closest(".dropbtn");
-      if ((e.key === "Enter" || e.key === " ") && isBtn) {
+      if (isBtn && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
-        activateFromBtn(e.target.closest(".dropbtn"), e);
+        const dd = e.target.closest(".dropdown");
+        const willOpen = !dd.classList.contains("open");
+        closeAll(dd);
+        setExpanded(dd, willOpen);
       }
       if (e.key === "Escape") closeAll();
     });
 
-    // Close on viewport change
-    window.addEventListener("resize", () => closeAll());
-    window.addEventListener("orientationchange", () => closeAll());
-  }
-})();
+    // C) Viewpor
