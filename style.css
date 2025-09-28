@@ -1,5 +1,6 @@
 /* =========================================================
    THEME TOKENS
+   - Global design variables
    ========================================================= */
 :root {
   --fg:#0f172a;
@@ -10,8 +11,11 @@
 
 /* =========================================================
    GLOBAL RESET & BASE
+   - Normalize box model and base typography
    ========================================================= */
 * { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; } /* prevent iOS auto-zoom */
 
 body {
   margin: 0;
@@ -23,11 +27,9 @@ body {
 a { color: var(--link); text-decoration: none; }
 a.nolink { color: inherit; }
 
-/* Prevent unintended auto text zoom on iOS Safari */
-html { -webkit-text-size-adjust: 100%; }
-
 /* =========================================================
    NAVIGATION BAR
+   - NOTE: 'position: relative' overrides 'sticky' → not fixed
    ========================================================= */
 .nav {
   position: sticky;          /* overridden by the next line */
@@ -35,7 +37,7 @@ html { -webkit-text-size-adjust: 100%; }
   z-index: 10;
   background: #fff;
   border-bottom: 1px solid #e5e7eb;
-  position: relative;        /* effective position */
+  position: relative;        /* effective position (kept to preserve behavior) */
 }
 
 .nav-inner {
@@ -48,7 +50,7 @@ html { -webkit-text-size-adjust: 100%; }
 }
 
 .nav-title {
-  position: absolute;
+  position: absolute;          /* centered overlay title (desktop) */
   left: 50%;
   transform: translateX(-50%);
   line-height: 56px;
@@ -63,9 +65,7 @@ html { -webkit-text-size-adjust: 100%; }
   align-items: center;
 }
 
-/* =========================================================
-   DROPDOWN
-   ========================================================= */
+/* Dropdown trigger/button */
 .dropbtn {
   background: transparent;
   border: 0;
@@ -75,20 +75,20 @@ html { -webkit-text-size-adjust: 100%; }
   display: flex;
   align-items: center;
   gap: 6px;
-  touch-action: manipulation; /* improve tap responsiveness on mobile */
 }
 
+/* Small caret triangle */
 .caret {
-  width: 0;
-  height: 0;
+  width: 0; height: 0;
   border: 4px solid transparent;
   border-top-color: var(--fg);
   margin-top: 2px;
 }
 
+/* Dropdown root */
 .dropdown { position: relative; }
 
-/* default hidden */
+/* Panel (hidden by default; JS toggles .open) */
 .dropdown-menu {
   position: absolute;
   right: 0;
@@ -102,14 +102,9 @@ html { -webkit-text-size-adjust: 100%; }
   box-shadow: 0 8px 24px rgba(0,0,0,.08);
   z-index: 1000;
 }
+.dropdown.open > .dropdown-menu { display: block; } /* desktop default */
 
-/* JS toggle (kept) */
-.dropdown.open .dropdown-menu { display: block; }
-
-/* CSS fallback: works without JS as well (hover/focus) */
-.dropdown:hover .dropdown-menu,
-.dropdown:focus-within .dropdown-menu { display: block; }
-
+/* Links inside dropdown */
 .dropdown-menu a {
   display: block;
   padding: 8px 10px;
@@ -129,7 +124,7 @@ html { -webkit-text-size-adjust: 100%; }
 }
 h1 { font-size: 42px; margin: 10px 0 12px; }
 
-/* .lead (merged) */
+/* Lead paragraph (merged definition) */
 .lead {
   font-size: 18px;
   max-width: 920px;
@@ -140,7 +135,7 @@ h1 { font-size: 42px; margin: 10px 0 12px; }
 }
 
 /* =========================================================
-   MISC UI
+   GENERAL UI
    ========================================================= */
 .pill {
   display: inline-block;
@@ -150,6 +145,7 @@ h1 { font-size: 42px; margin: 10px 0 12px; }
   color: #334155;
   font-size: 14px;
 }
+
 footer {
   border-top: 1px solid #e5e7eb;
   padding: 24px 16px;
@@ -157,12 +153,12 @@ footer {
   color: var(--muted);
 }
 
-/* .container (merged) */
 .container {
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px;
 }
+
 .back { color: #334155; }
 
 /* =========================================================
@@ -203,7 +199,10 @@ footer {
   color: #0f172a;
 }
 .badges {
-  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .badges .pill {
   padding: 6px 10px;
@@ -215,9 +214,10 @@ footer {
 }
 
 /* =========================================================
-   GENERIC SECTION LAYOUT
+   SECTION HEADINGS & TEXT
    ========================================================= */
 .section { padding: 64px 0; }
+
 .h-title {
   font-size: clamp(28px,5vw,42px);
   font-weight: 800;
@@ -226,6 +226,7 @@ footer {
   text-align: left;
   color: #0f172a;
 }
+
 .lead-left {
   max-width: 980px;
   line-height: 1.7;
@@ -235,9 +236,7 @@ footer {
   text-align: left;
 }
 
-/* =========================================================
-   BULLET LIST
-   ========================================================= */
+/* Bulleted list */
 .bullets { list-style: none; padding: 0; margin: 18px 0 0; }
 .bullets li {
   margin: 10px 0;
@@ -246,21 +245,20 @@ footer {
 }
 .bullets li::before { content: "– "; font-weight: 800; }
 
-/* =========================================================
-   MISC TEXT BLOCKS
-   ========================================================= */
+/* Misc text blocks */
 .mail {
   margin: 6px 0;
   font-size: 14px;
   color: #1f2937;
   font-family: "Segoe UI",Arial,sans-serif;
 }
-.mail span:first-child {
-  font-weight: 600; margin-right: 6px; color: #2563eb;
-}
+.mail span:first-child { font-weight: 600; margin-right: 6px; color: #2563eb; }
+
 .career {
   margin: 4px 0 14px;
-  font-size: 13px; line-height: 1.5; color: #374151;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #374151;
   font-family: "Arial",sans-serif;
   max-width: 800px;
 }
@@ -275,6 +273,8 @@ footer {
 
 /* =========================================================
    CAPTION TYPOGRAPHY (Fluid on mobile)
+   - Keeps captions readable over images
+   - !important to win against inline styles if any
    ========================================================= */
 main section .caption h2 { font-size: clamp(16px, 4.2vw, 24px) !important; }
 main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-height: 1.45; }
@@ -284,21 +284,22 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
 }
 
 /* =========================================================
-   RESPONSIVE: NAVIGATION (single source of truth)
-   - Two-row grid nav; dropdown not clipped; CSS fallback enabled
+   RESPONSIVE NAV: SMALL SCREENS (≤768px)
+   - 2-row layout (title on row 1, menu on row 2)
+   - Dropdown shown as full-width overlay to avoid clipping
    ========================================================= */
 @media (max-width: 768px){
-  /* 2-row grid */
+  /* Make the bar a two-row grid */
   .nav-inner{
     display: grid !important;
     grid-template-columns: 1fr auto 1fr; /* spacer | title | spacer */
     grid-template-rows: auto auto;       /* row1: title, row2: menu */
     align-items: center;
     row-gap: 6px;
-    overflow: visible;                    /* ensure dropdown can escape */
+    overflow: visible;                   /* allow overlay to escape */
   }
 
-  /* title on row 1, centered */
+  /* Title becomes a normal block on its own row */
   .nav-title{
     position: static !important;
     transform: none !important;
@@ -314,82 +315,50 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
     pointer-events: none;
   }
 
-  /* menu on row 2; horizontal scroll */
+  /* Horizontal scrolling menu on row 2 */
   .menu{
     grid-column: 1 / -1;
     grid-row: 2;
     justify-self: start;
     overflow-x: auto;
-    overflow-y: visible;                 /* ← critical: prevent clipping */
+    overflow-y: visible;                 /* dropdown must be visible vertically */
     -webkit-overflow-scrolling: touch;
     white-space: nowrap;
     gap: 14px;
     max-width: 100%;
     min-width: 0;
-    padding-left: 20px;
+    padding-left: 20px;                  /* small indent so it doesn't hug the edge */
   }
 
-  /* dropdown positioning & layering */
-  .dropdown{ position: relative; }
-  .dropdown-menu{
-    left: 0; right: auto;
-    top: calc(100% + 6px);
+  /* Use viewport overlay for open dropdowns to prevent clipping within scrollers */
+  .dropdown{ position: static; }         /* overlay anchored to viewport */
+  .dropdown.open > .dropdown-menu{
+    position: fixed;                     /* full-width overlay on mobile */
+    left: 0; right: 0;
+    top: var(--nav-height, 56px);        /* synced from nav.js */
+    max-height: 50vh;
+    overflow: auto;
+    border-radius: 0;
     z-index: 9999;
   }
 
-  /* fallback remains active on mobile too */
-  .dropdown:hover .dropdown-menu,
-  .dropdown:focus-within .dropdown-menu { display: block; }
+  /* Align panels to the left on small screens for consistency */
+  .dropdown-menu{ left: 0; right: auto; top: calc(100% + 6px); }
 }
 
-/* Extra-tight phones */
+/* Extra-tight phones: slightly more padding/downsizing */
 @media (max-width: 420px){
   .menu{ padding-left: 24px; }
   .menu > a, .menu .dropbtn{ font-size: clamp(12px, 3.6vw, 14px); }
   .nav-title{ font-size: clamp(14px, 4vw, 16px); }
 }
 
-/* Last resort: hide title on very tiny screens */
+/* Last-resort on very tiny screens: hide the title if needed */
 @media (max-width: 360px){
   .nav-title{ display: none !important; }
 }
 
-/* Subnav heading (kept) */
+/* Subnav heading size (kept for compatibility) */
 @media (max-width:480px){
   .subnav h1 { font-size: 22px; }
 }
-
-@media (max-width: 768px){
-  .nav-inner{ overflow: visible; }
-  .menu{
-    overflow-x: auto;
-    overflow-y: visible; /* ← 중요: hidden이면 드롭다운이 잘립니다 */
-  }
-  .dropdown{ position: relative; }
-  .dropdown-menu{
-    left: 0; right: auto;
-    top: calc(100% + 6px);
-    z-index: 9999;
-  }
-}
-
-/* Mobile: show dropdown as full-width overlay to avoid clipping */
-@media (max-width: 768px){
-  .nav-inner{ overflow: visible; }
-  .menu{
-    overflow-x: auto; 
-    overflow-y: visible;        /* 드롭다운 세로 펼침 허용 */
-    -webkit-overflow-scrolling: touch;
-  }
-  .dropdown{ position: static; } /* 오버레이 기준을 viewport로 */
-  .dropdown.open > .dropdown-menu{
-    position: fixed;            /* 전체 폭 오버레이 */
-    left: 0; right: 0;
-    top: var(--nav-height, 56px);  /* nav.js에서 설정한 높이 사용 */
-    max-height: 50vh;
-    overflow: auto;
-    border-radius: 0;
-    z-index: 9999;
-  }
-}
-
