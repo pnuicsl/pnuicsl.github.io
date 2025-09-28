@@ -79,3 +79,13 @@
     window.addEventListener("orientationchange", () => closeAll());
   }
 })();
+// nav 높이 CSS 변수 갱신 (회전/리사이즈 대응)
+function updateNavHeight(){
+  const nav = document.querySelector("#site-nav .nav");
+  const h = nav ? nav.getBoundingClientRect().height : 56;
+  document.documentElement.style.setProperty("--nav-height", h + "px");
+}
+window.addEventListener("resize", updateNavHeight);
+window.addEventListener("orientationchange", updateNavHeight);
+updateNavHeight();
+
