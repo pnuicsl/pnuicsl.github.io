@@ -15,7 +15,7 @@
    ========================================================= */
 * { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; } /* prevent iOS auto-zoom */
+html { -webkit-text-size-adjust: 100%; } /* Prevent iOS auto-zoom */
 
 body {
   margin: 0;
@@ -284,12 +284,13 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
 }
 
 /* =========================================================
-   RESPONSIVE NAV: SMALL SCREENS (≤768px)
-   - 2-row layout (title on row 1, menu on row 2)
-   - Dropdown shown as full-width overlay to avoid clipping
+   RESPONSIVE (≤768px)
+   - Two-row nav layout
+   - Mobile dropdown as full-width overlay (no clipping)
+   - Intro card grows to fit long text
    ========================================================= */
 @media (max-width: 768px){
-  /* Make the bar a two-row grid */
+  /* NAV: two-row grid */
   .nav-inner{
     display: grid !important;
     grid-template-columns: 1fr auto 1fr; /* spacer | title | spacer */
@@ -299,7 +300,6 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
     overflow: visible;                   /* allow overlay to escape */
   }
 
-  /* Title becomes a normal block on its own row */
   .nav-title{
     position: static !important;
     transform: none !important;
@@ -315,7 +315,6 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
     pointer-events: none;
   }
 
-  /* Horizontal scrolling menu on row 2 */
   .menu{
     grid-column: 1 / -1;
     grid-row: 2;
@@ -330,7 +329,7 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
     padding-left: 20px;                  /* small indent so it doesn't hug the edge */
   }
 
-  /* Use viewport overlay for open dropdowns to prevent clipping within scrollers */
+  /* Mobile overlay for open dropdowns (prevents clipping inside scrollers) */
   .dropdown{ position: static; }         /* overlay anchored to viewport */
   .dropdown.open > .dropdown-menu{
     position: fixed;                     /* full-width overlay on mobile */
@@ -342,18 +341,35 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
     z-index: 9999;
   }
 
-  /* Align panels to the left on small screens for consistency */
-  .dropdown-menu{ left: 0; right: auto; top: calc(100% + 6px); }
+  /* Align closed panels when needed (does NOT override the overlay rule) */
+  .dropdown:not(.open) > .dropdown-menu{
+    left: 0; right: auto; top: calc(100% + 6px);
+  }
+
+  /* INTRO: avoid clipping long paragraph */
+  .intro .frame{
+    height: auto !important;     /* override any fixed height like 72vh */
+    min-height: 0 !important;
+    overflow: visible !important;/* prevent clipping of text */
+  }
+  .intro .inner{
+    transform: none;             /* avoid vertical offset that can crop */
+    padding: 24px 16px;          /* tighter padding for phones */
+  }
+  .intro .lead{
+    font-size: clamp(15px, 3.8vw, 18px);
+    line-height: 1.6;
+  }
 }
 
-/* Extra-tight phones: slightly more padding/downsizing */
+/* Extra-tight phones */
 @media (max-width: 420px){
   .menu{ padding-left: 24px; }
   .menu > a, .menu .dropbtn{ font-size: clamp(12px, 3.6vw, 14px); }
   .nav-title{ font-size: clamp(14px, 4vw, 16px); }
 }
 
-/* Last-resort on very tiny screens: hide the title if needed */
+/* Very tiny screens: last-resort hide of center title */
 @media (max-width: 360px){
   .nav-title{ display: none !important; }
 }
@@ -362,22 +378,3 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
 @media (max-width:480px){
   .subnav h1 { font-size: 22px; }
 }
-
-/* Fix: Intro card should grow to fit long text on small screens */
-@media (max-width: 768px){
-  .intro .frame{
-    height: auto !important;     /* override fixed height like 72vh */
-    min-height: 0 !important;
-    overflow: visible !important;/* prevent clipping of text */
-  }
-  .intro .inner{
-    transform: none;             /* avoid vertical cropping offset */
-    padding: 24px 16px;          /* a bit tighter padding for phones */
-  }
-  /* (optional) slightly responsive font for the long intro paragraph */
-  .intro .lead{
-    font-size: clamp(15px, 3.8vw, 18px);
-    line-height: 1.6;
-  }
-}
-
