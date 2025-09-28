@@ -381,7 +381,7 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
 
 /* Small inline link after the name */
 .prof-name .ext-link{
-  font-size: 0.5em;      /* smaller than the name */
+  font-size: 0.6em;      /* smaller than the name */
   margin-left: 0.75em;    /* adds some spacing (spaces collapse in HTML) */
   font-weight: 500;       /* not too bold */
    line-height: 1;
@@ -396,6 +396,7 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
 @media (max-width: 420px){
   .prof-name .ext-link{ font-size: 12px; }
 }
+
 
 
 
