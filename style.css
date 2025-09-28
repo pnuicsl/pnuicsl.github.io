@@ -362,3 +362,22 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
 @media (max-width:480px){
   .subnav h1 { font-size: 22px; }
 }
+
+/* Fix: Intro card should grow to fit long text on small screens */
+@media (max-width: 768px){
+  .intro .frame{
+    height: auto !important;     /* override fixed height like 72vh */
+    min-height: 0 !important;
+    overflow: visible !important;/* prevent clipping of text */
+  }
+  .intro .inner{
+    transform: none;             /* avoid vertical cropping offset */
+    padding: 24px 16px;          /* a bit tighter padding for phones */
+  }
+  /* (optional) slightly responsive font for the long intro paragraph */
+  .intro .lead{
+    font-size: clamp(15px, 3.8vw, 18px);
+    line-height: 1.6;
+  }
+}
+
