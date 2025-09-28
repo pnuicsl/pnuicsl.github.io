@@ -438,7 +438,7 @@ main section .caption p {
   /* 메뉴를 타이틀 아래(2행)로 두고, 시작점을 오른쪽으로 인덴트 */
   .menu{
     order: 2;
-    padding-left: max(20px, env(safe-area-inset-left)); /* ← 시작점 오른쪽으로 이동 */
+    padding-left: max(28px, env(safe-area-inset-left)); /* ← 시작점 오른쪽으로 이동 */
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
@@ -455,5 +455,6 @@ main section .caption p {
     display: inline-block;
   }
 }
+
 
 
