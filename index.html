@@ -1,47 +1,135 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="stylesheet" href="/style.css">
-<title>PNUICSL</title>
-<style>
-  :root { --fg:#0f172a; --muted:#64748b; --ring:#e5e7eb; --link:#2563eb; }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/style.css">
+  <title>PNUICSL</title>
 
-  html,body { margin:0; }
-  body { font-family:system-ui,-apple-system,Segoe UI,Roboto,AppleSDGothicNeo,Malgun Gothic,Helvetica,Arial,sans-serif; color:var(--fg); }
+  <style>
+    /* ============================================
+       THEME TOKENS (CSS custom properties)
+       - Reusable colors for text, borders, links
+       ============================================ */
+    :root { --fg:#0f172a; --muted:#64748b; --ring:#e5e7eb; --link:#2563eb; }
 
-  main { scroll-snap-type:y mandatory; }
-  section{  min-height: calc(100vh - 56px);  display: grid; place-items: start center; padding-top: 36px; }
-  .frame {
-    width:min(1100px, 92vw); height:min(72vh, 760px);
-    border:1px solid var(--ring); border-radius:18px; overflow:hidden;
-    box-shadow:0 24px 60px rgba(0,0,0,.10); position:relative; background:#000;
-    opacity:0; transform:translateY(18px) scale(.98); transition:opacity .7s ease, transform .7s ease;
-  }
-  section.is-visible .frame{ opacity:1; transform:none; }
+    /* ============================================
+       BASE DOCUMENT RESET & TYPOGRAPHY
+       - Remove default margins, set font stack
+       ============================================ */
+    html,body { margin:0; }
+    body {
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,AppleSDGothicNeo,Malgun Gothic,Helvetica,Arial,sans-serif;
+      color:var(--fg);
+    }
 
-  .img{position:absolute;inset:0;background-position:center;background-size:contain;background-repeat:no-repeat;background-color:#000;opacity:0;transition:opacity .9s ease;}
-  section.is-visible .img{ opacity:1; }
+    /* ============================================
+       PAGE LAYOUT
+       - Full-height sections
+       - Vertical scroll snapping between sections
+       ============================================ */
+    main { scroll-snap-type:y mandatory; }
+    section {
+      min-height: calc(100vh - 56px);   /* occupy viewport height minus an assumed top bar */
+      display: grid;
+      place-items: start center;         /* align content; "start" vertically, centered horizontally */
+      padding-top: 36px;                 /* top spacing inside each section */
+    }
 
-  .caption{ position:absolute; left:0; right:0; bottom:0; padding:18px 20px;
-            background:linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0)); color:#fff; }
-  .caption h2{ margin:.2rem 0 .2rem; font-size:22px; font-weight:700; }
-  .caption p{ margin:0; font-size:15px; color:#e5e7eb; }
+    /* ============================================
+       FRAME (content card)
+       - Rounded, shadowed container
+       - Initially hidden for entrance transition
+       - Becomes visible when section enters viewport
+       ============================================ */
+    .frame {
+      width:min(1100px, 92vw);
+      height:min(72vh, 760px);
+      border:1px solid var(--ring);
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 24px 60px rgba(0,0,0,.10);
+      position:relative;
+      background:#000;
+      opacity:0;                           /* hidden before intersection */
+      transform:translateY(18px) scale(.98);
+      transition:opacity .7s ease, transform .7s ease;  /* smooth fade & lift */
+    }
+    section.is-visible .frame { opacity:1; transform:none; }
 
-  .intro{ background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%); }
-  .intro .frame{ background:#fff; }
-  .intro .inner{ height:100%; display:grid; place-items:center; text-align:center; padding:24px; }
-  .intro h1{ font-size:40px; margin:0 0 10px; }
-  .intro p{ color:var(--muted); margin:0; }
+    /* ============================================
+       IMAGE LAYER
+       - Absolutely positioned background image
+       - Fades in when section becomes visible
+       - "contain" preserves aspect ratio without cropping
+       ============================================ */
+    .img{
+      position:absolute; inset:0;
+      background-position:center;
+      background-size:contain;
+      background-repeat:no-repeat;
+      background-color:#000;
+      opacity:0;
+      transition:opacity .9s ease;
+    }
+    section.is-visible .img { opacity:1; }
 
-  footer{ text-align:center; padding:18px; color:var(--muted); }
-</style>
+    /* ============================================
+       CAPTION OVERLAY
+       - Gradient mask for text readability
+       - Heading and paragraph styles
+       ============================================ */
+    .caption{
+      position:absolute; left:0; right:0; bottom:0;
+      padding:18px 20px;
+      background:linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0));
+      color:#fff;
+    }
+    .caption h2{ margin:.2rem 0 .2rem; font-size:22px; font-weight:700; }
+    .caption p{ margin:0; font-size:15px; color:#e5e7eb; }
+
+    /* ============================================
+       INTRO SECTION (hero)
+       - Light gradient background
+       - Centered content inside the frame
+       ============================================ */
+    .intro{ background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%); }
+    .intro .frame{ background:#fff; }
+    .intro .inner{
+      height:100%;
+      display:grid; place-items:center;
+      text-align:center;
+      padding:24px;
+    }
+    .intro h1{ font-size:40px; margin:0 0 10px; }
+    .intro p{ color:var(--muted); margin:0; }
+
+    /* ============================================
+       FOOTER
+       - Centered muted text
+       - Year is populated by JS at runtime
+       ============================================ */
+    footer{ text-align:center; padding:18px; color:var(--muted); }
+  </style>
 </head>
 <body>
+  <!-- =========================================================
+       NAVIGATION MOUNT POINT
+       - /assets/nav.js is expected to render a nav into this div
+       ========================================================= -->
   <div id="site-nav"></div>
 
+  <!-- =========================================================
+       MAIN CONTENT
+       - Each <section> is a scroll snap point
+       - Content sits inside .frame (image + caption overlay)
+       ========================================================= -->
   <main>
+    <!-- =========================
+         INTRO / HERO SECTION
+         - Lab title + description
+         - Scroll hint arrows
+         ========================= -->
     <section class="intro">
       <div class="frame" style="display:grid;place-items:center;">
         <div class="inner">
@@ -58,6 +146,11 @@ Integrated Circuits and Systems Laboratory (ICSL) in the Pusan National Universi
       </div>
     </section>
 
+    <!-- ===============================================
+         SECTION: Implantable Neural Interface
+         - Background image set via inline style
+         - Text caption overlays the image
+         =============================================== -->
     <section>
       <div class="frame">
         <div class="img" style="background-image:url(/images/intro_pic1.png)"></div>
@@ -70,6 +163,10 @@ Integrated Circuits and Systems Laboratory (ICSL) in the Pusan National Universi
       </div>
     </section>
 
+    <!-- ===============================================
+         SECTION: High Density Neuromodulation
+         - Another image + caption card
+         =============================================== -->
     <section>
       <div class="frame">
         <div class="img" style="background-image:url(/images/intro_pic2.png)"></div>
@@ -83,6 +180,9 @@ Integrated Circuits and Systems Laboratory (ICSL) in the Pusan National Universi
       </div>
     </section>
 
+    <!-- ===============================================
+         SECTION: Highly Efficient Power Converters
+         =============================================== -->
     <section>
       <div class="frame">
         <div class="img" style="background-image:url(/images/intro_pic3.jpg)"></div>
@@ -94,6 +194,9 @@ Integrated Circuits and Systems Laboratory (ICSL) in the Pusan National Universi
       </div>
     </section>
 
+    <!-- ===============================================
+         SECTION: Energy Harvesting
+         =============================================== -->
     <section>
       <div class="frame">
         <div class="img" style="background-image:url(/images/intro_pic4.jpg)"></div>
@@ -106,37 +209,69 @@ Integrated Circuits and Systems Laboratory (ICSL) in the Pusan National Universi
     </section>
   </main>
 
+  <!-- ===============================================
+       FOOTER
+       - Year is injected by JS below (dynamic)
+       =============================================== -->
   <footer>© <span id="y"></span> PNUICSL</footer>
 
-<script>
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if (e.isIntersecting) e.target.classList.add('is-visible');
-      else e.target.classList.remove('is-visible');
-    });
-  }, { threshold: 0.35 });
-  document.querySelectorAll('section').forEach(sec=>io.observe(sec));
-  document.getElementById('y').textContent = new Date().getFullYear();
-</script>
+  <script>
+    /* =========================================================
+       INTERSECTION OBSERVER
+       - Watches each <section>
+       - Adds 'is-visible' when section enters viewport
+         -> triggers CSS transitions on .frame and .img
+       - Removes it when out, enabling re-animations on scroll
+       ========================================================= */
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if (e.isIntersecting) e.target.classList.add('is-visible');
+        else e.target.classList.remove('is-visible');
+      });
+    }, { threshold: 0.35 });
 
-<script src="/assets/nav.js" data-base="/"></script>
+    /* Observe all sections */
+    document.querySelectorAll('section').forEach(sec=>io.observe(sec));
 
-<script>
-  (function addNavTitle(){
-    function place(){
-      const inner = document.querySelector('.nav .nav-inner');
-      if(!inner) return setTimeout(place, 30); 
-      const t = document.createElement('div');
-      t.className = 'nav-title';
-      t.textContent = 'PNU ICSL'; 
-      inner.appendChild(t);
-    }
-    place();
-  })();
-</script>
+    /* FOOTER YEAR
+       - Simple convenience: current year appears automatically */
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
 
-<!-- 🔒 Protect script -->
-<script src="/assets/project.js"></script>
+  <!-- ===============================================
+       NAVIGATION SCRIPT
+       - External script expected to render site navigation
+       - data-base can be used by the script to resolve URLs
+       =============================================== -->
+  <script src="/assets/nav.js" data-base="/"></script>
+
+  <script>
+    /* =========================================================
+       NAV TITLE INJECTION
+       - Waits for '.nav .nav-inner' (created by nav.js)
+       - Appends a 'PNU ICSL' title to the navigation
+       - Uses a tiny polling loop until the target exists
+       ========================================================= */
+    (function addNavTitle(){
+      function place(){
+        const inner = document.querySelector('.nav .nav-inner');
+        if(!inner) return setTimeout(place, 30); 
+        const t = document.createElement('div');
+        t.className = 'nav-title';
+        t.textContent = 'PNU ICSL'; 
+        inner.appendChild(t);
+      }
+      place();
+    })();
+  </script>
+
+  <!-- ===============================================
+       PROJECT SCRIPT
+       - Additional behaviors; details are in /assets/project.js
+       - The lock emoji comment indicates intended protection area
+       =============================================== -->
+  <!-- 🔒 Protect script -->
+  <script src="/assets/project.js"></script>
 
 </body>
 </html>
