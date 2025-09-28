@@ -1,3 +1,7 @@
+/* =========================================================
+   THEME TOKENS
+   - Global color variables reused across the site
+   ========================================================= */
 :root {
   --fg:#0f172a;
   --bg:#ffffff;
@@ -5,26 +9,40 @@
   --link:#2563eb;
 }
 
-/* === Global reset === */
+/* =========================================================
+   GLOBAL RESET & BASE
+   - Normalize box model and basic typography
+   ========================================================= */
 * { box-sizing: border-box; }
+
 body {
   margin: 0;
   font-family: system-ui,-apple-system,Segoe UI,Roboto,AppleSDGothicNeo,Malgun Gothic,Helvetica,Arial,sans-serif;
   color: var(--fg);
   background: var(--bg);
 }
+
 a { color: var(--link); text-decoration: none; }
 a.nolink { color: inherit; }
 
-/* === Navigation Bar === */
+/* Prevent unintended auto text zoom on iOS Safari */
+html { -webkit-text-size-adjust: 100%; }
+
+/* =========================================================
+   NAVIGATION BAR
+   - Note: 'position: sticky' is followed by 'position: relative'
+     in the original. The latter wins, so the bar is not sticky.
+     Kept as-is to preserve current behavior.
+   ========================================================= */
 .nav {
-  position: sticky;
+  position: sticky;          /* overridden by the next line */
   top: 0;
   z-index: 10;
   background: #fff;
   border-bottom: 1px solid #e5e7eb;
-  position: relative;
+  position: relative;        /* effective position */
 }
+
 .nav-inner {
   max-width: 1100px;
   margin: 0 auto;
@@ -33,6 +51,7 @@ a.nolink { color: inherit; }
   align-items: center;
   justify-content: space-between;
 }
+
 .nav-title {
   position: absolute;
   left: 50%;
@@ -42,13 +61,17 @@ a.nolink { color: inherit; }
   font-size: 18px;
   pointer-events: none;
 }
+
 .menu {
   display: flex;
   gap: 18px;
   align-items: center;
 }
 
-/* === Dropdown Button === */
+/* =========================================================
+   DROPDOWN
+   - Button, caret, container, and menu behaviors
+   ========================================================= */
 .dropbtn {
   background: transparent;
   border: 0;
@@ -59,6 +82,7 @@ a.nolink { color: inherit; }
   align-items: center;
   gap: 6px;
 }
+
 .caret {
   width: 0;
   height: 0;
@@ -67,10 +91,9 @@ a.nolink { color: inherit; }
   margin-top: 2px;
 }
 
-/* === Dropdown Container === */
 .dropdown { position: relative; }
 
-/* Dropdown menu (default hidden) */
+/* Hidden by default; toggled via .dropdown.open */
 .dropdown-menu {
   position: absolute;
   right: 0;
@@ -80,43 +103,54 @@ a.nolink { color: inherit; }
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  display: none; /* hidden by default */
+  display: none;
   box-shadow: 0 8px 24px rgba(0,0,0,.08);
   z-index: 1000;
 }
 
-/* Dropdown menu (visible when .open is toggled by JS) */
-.dropdown.open .dropdown-menu {
-  display: block;
-}
+.dropdown.open .dropdown-menu { display: block; }
 
-/* Dropdown menu items */
 .dropdown-menu a {
   display: block;
   padding: 8px 10px;
   border-radius: 6px;
   color: var(--fg);
 }
-.dropdown-menu a:hover {
-  background: #f3f4f6;
-}
 
-/* === Hero section === */
+.dropdown-menu a:hover { background: #f3f4f6; }
+
+/* =========================================================
+   HERO / INTRO (Generic heading container)
+   ========================================================= */
 .hero {
   max-width: 1100px;
   margin: 60px auto;
   padding: 0 16px;
   text-align: center;
 }
-h1 { font-size: 42px; margin: 10px 0 12px; }
-.lead {
-  color: var(--muted);
-  font-size: 18px;
-  margin: 0 auto 30px;
-  max-width: 720px;
+
+h1 {
+  font-size: 42px;
+  margin: 10px 0 12px;
 }
 
-/* === Miscellaneous UI elements === */
+/* ---------------------------------------------------------
+   .lead (MERGED)
+   - Consolidated from two separate .lead blocks in the original.
+   - Keeps font-size from the first and layout/typography from the second.
+   --------------------------------------------------------- */
+.lead {
+  font-size: 18px;        /* from the first .lead */
+  max-width: 920px;       /* from the second .lead */
+  color: #475569;         /* from the second .lead (instead of --muted) */
+  line-height: 1.6;       /* from the second .lead */
+  text-align: center;     /* from the second .lead */
+  margin: 0 auto;         /* unified centering (no extra bottom margin) */
+}
+
+/* =========================================================
+   MISCELLANEOUS UI
+   ========================================================= */
 .pill {
   display: inline-block;
   padding: 8px 14px;
@@ -125,23 +159,30 @@ h1 { font-size: 42px; margin: 10px 0 12px; }
   color: #334155;
   font-size: 14px;
 }
+
 footer {
   border-top: 1px solid #e5e7eb;
   padding: 24px 16px;
   text-align: center;
   color: var(--muted);
 }
+
+/* ---------------------------------------------------------
+   .container (MERGED)
+   - Defined twice in the original; the later rule effectively won.
+   - Using the effective values here.
+   --------------------------------------------------------- */
 .container {
   max-width: 1100px;
-  margin: 30px auto;
-  padding: 0 16px;
+  margin: 0 auto;     /* later rule’s value */
+  padding: 0 24px;    /* later rule’s value */
 }
-@media(max-width:480px){
-  .subnav h1 { font-size: 22px; }
-}
+
 .back { color: #334155; }
 
-/* === Card layout === */
+/* =========================================================
+   CARD LAYOUT
+   ========================================================= */
 .cards {
   list-style: none;
   padding: 0;
@@ -150,6 +191,7 @@ footer {
   grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
   gap: 14px;
 }
+
 .card {
   border: 1px solid #e5e7eb;
   border-radius: 14px;
@@ -157,11 +199,14 @@ footer {
   box-shadow: 0 4px 18px rgba(0,0,0,.04);
 }
 
-/* === Intro section === */
+/* =========================================================
+   INTRO SECTION (Page-specific visuals)
+   ========================================================= */
 .intro .frame {
   background: radial-gradient(1200px 600px at 50% 30%,#ffffff 0%,#f8fafc 60%,#f1f5f9 100%);
   border: 1px solid #e2e8f0;
 }
+
 .intro .inner {
   display: grid;
   place-items: center;
@@ -169,24 +214,20 @@ footer {
   padding: 40px 32px;
   transform: translateY(-20px);
 }
+
 .intro h1 {
   font-size: clamp(32px,5vw,44px);
   letter-spacing: .2px;
   color: #0f172a;
 }
-.lead {
-  max-width: 920px;
-  color: #475569;
-  line-height: 1.6;
-  text-align: center;
-  margin: 0 auto;
-}
+
 .badges {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .badges .pill {
   padding: 6px 10px;
   border: 1px solid #e2e8f0;
@@ -196,13 +237,11 @@ footer {
   background: #fff;
 }
 
-/* === Section layout === */
+/* =========================================================
+   GENERIC SECTION LAYOUT
+   ========================================================= */
 .section { padding: 64px 0; }
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
+
 .h-title {
   font-size: clamp(28px,5vw,42px);
   font-weight: 800;
@@ -211,6 +250,7 @@ footer {
   text-align: left;
   color: #0f172a;
 }
+
 .lead-left {
   max-width: 980px;
   line-height: 1.7;
@@ -220,34 +260,42 @@ footer {
   text-align: left;
 }
 
-/* === Bullet list === */
+/* =========================================================
+   BULLET LIST
+   ========================================================= */
 .bullets {
   list-style: none;
   padding: 0;
   margin: 18px 0 0;
 }
+
 .bullets li {
   margin: 10px 0;
   font-weight: 800;
   font-size: clamp(15px,2vw,20px);
 }
+
 .bullets li::before {
   content: "– ";
   font-weight: 800;
 }
 
-/* === Misc text === */
+/* =========================================================
+   MISC TEXT BLOCKS
+   ========================================================= */
 .mail {
   margin: 6px 0;
   font-size: 14px;
   color: #1f2937;
   font-family: "Segoe UI",Arial,sans-serif;
 }
+
 .mail span:first-child {
   font-weight: 600;
   margin-right: 6px;
   color: #2563eb;
 }
+
 .career {
   margin: 4px 0 14px;
   font-size: 13px;
@@ -256,27 +304,35 @@ footer {
   font-family: "Arial",sans-serif;
   max-width: 800px;
 }
+
 .career span { display: block; }
 
-/* === Scroll hint === */
+/* =========================================================
+   SCROLL HINT
+   ========================================================= */
 .scroll-hint {
   display: flex;
   gap: 6px;
   align-items: center;
   color: #64748b;
 }
+
 .bounce {
   display: inline-block;
   font-size: 20px;
   animation: bounce 1.2s ease-in-out infinite;
 }
+
 @keyframes bounce {
   0%,100% { transform: translateY(0); }
-  50% { transform: translateY(15px); }
+  50%     { transform: translateY(15px); }
 }
 
-/* === Responsive fixes === */
-@media(max-width:768px){
+/* =========================================================
+   RESPONSIVE FIXES
+   - Mobile overflow handling for nav menu and dropdown
+   ========================================================= */
+@media (max-width:768px){
   .menu {
     overflow-x: auto;
     overflow-y: hidden;
@@ -293,24 +349,38 @@ footer {
     display: inline-block;
   }
   .dropdown-menu {
-    left: 0;
+    left: 0;          /* anchor to left edge on small screens */
     right: auto;
-    top: 100%;
+    top: 100%;        /* closer to the trigger */
   }
 }
 
-/* iOS 사파리 자동 글자 키우기 방지(권장) */
-html { -webkit-text-size-adjust: 100%; }
-
-/* 캡션 제목/본문을 뷰포트에 맞춰 유동형으로 */
-main section .caption h2 { font-size: clamp(16px, 4.2vw, 22px) !important; }
-main section .caption p  { font-size: clamp(11px, 3.4vw, 15px) !important; line-height: 1.45; }
-
-/* 매우 작은 화면(≤360px)에서는 더 타이트하게 */
-@media (max-width: 360px){
-  main section .caption p { font-size: clamp(10px, 3.6vw, 14px) !important; }
+/* =========================================================
+   CAPTION TYPOGRAPHY (Fluid on mobile)
+   - Keeps text readable over images by scaling with viewport
+   - '!important' used to override inline/inline-style precedence
+     from page-local styles if present.
+   ========================================================= */
+main section .caption h2 {
+  font-size: clamp(16px, 4.2vw, 22px) !important;
 }
 
+main section .caption p {
+  font-size: clamp(11px, 3.4vw, 15px) !important;
+  line-height: 1.45;
+}
 
+/* Tighter lower bound on very small screens (≤ 360px) */
+@media (max-width: 360px){
+  main section .caption p {
+    font-size: clamp(10px, 3.6vw, 14px) !important;
+  }
+}
 
-
+/* =========================================================
+   MOBILE-ONLY TWEAKS FOR SUBNAV HEADING
+   - Kept from original; placed near the other media rules
+   ========================================================= */
+@media (max-width:480px){
+  .subnav h1 { font-size: 22px; }
+}
