@@ -372,3 +372,24 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
     z-index: 9999;
   }
 }
+
+/* Mobile: show dropdown as full-width overlay to avoid clipping */
+@media (max-width: 768px){
+  .nav-inner{ overflow: visible; }
+  .menu{
+    overflow-x: auto; 
+    overflow-y: visible;        /* 드롭다운 세로 펼침 허용 */
+    -webkit-overflow-scrolling: touch;
+  }
+  .dropdown{ position: static; } /* 오버레이 기준을 viewport로 */
+  .dropdown.open > .dropdown-menu{
+    position: fixed;            /* 전체 폭 오버레이 */
+    left: 0; right: 0;
+    top: var(--nav-height, 56px);  /* nav.js에서 설정한 높이 사용 */
+    max-height: 50vh;
+    overflow: auto;
+    border-radius: 0;
+    z-index: 9999;
+  }
+}
+
