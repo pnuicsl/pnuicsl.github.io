@@ -1,143 +1,53 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="/style.css">
-  <title>PNUICSL</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" href="/style.css">
+<title>PNUICSL</title>
+<style>
+  :root { --fg:#0f172a; --muted:#64748b; --ring:#e5e7eb; --link:#2563eb; }
 
-  <style>
-    /* ===============================
-       Global Variables & Base Styles
-       =============================== */
-    :root {
-      --fg:#0f172a;     /* default foreground (text) color */
-      --muted:#64748b;  /* muted gray text color */
-      --ring:#e5e7eb;   /* border color */
-      --link:#2563eb;   /* link highlight color */
-    }
+  html,body { margin:0; }
+  body { font-family:system-ui,-apple-system,Segoe UI,Roboto,AppleSDGothicNeo,Malgun Gothic,Helvetica,Arial,sans-serif; color:var(--fg); }
 
-    html, body { margin:0; }
-    body {
-      font-family:system-ui, -apple-system, Segoe UI, Roboto,
-                  AppleSDGothicNeo, Malgun Gothic, Helvetica, Arial, sans-serif;
-      color:var(--fg);
-    }
+  main { scroll-snap-type:y mandatory; }
+  section{  min-height: calc(100vh - 56px);  display: grid; place-items: start center; padding-top: 36px; }
+  .frame {
+    width:min(1100px, 92vw); height:min(72vh, 760px);
+    border:1px solid var(--ring); border-radius:18px; overflow:hidden;
+    box-shadow:0 24px 60px rgba(0,0,0,.10); position:relative; background:#000;
+    opacity:0; transform:translateY(18px) scale(.98); transition:opacity .7s ease, transform .7s ease;
+  }
+  section.is-visible .frame{ opacity:1; transform:none; }
 
-    /* ===============================
-       Layout for sections & scroll snap
-       =============================== */
-    main { scroll-snap-type:y mandatory; }
-    section {
-      min-height: calc(100vh - 56px);  /* full viewport height minus header */
-      display: grid;
-      place-items: start center;
-      padding-top: 36px;
-    }
+  .img{position:absolute;inset:0;background-position:center;background-size:contain;background-repeat:no-repeat;background-color:#000;opacity:0;transition:opacity .9s ease;}
+  section.is-visible .img{ opacity:1; }
 
-    /* ===============================
-       Frame container
-       =============================== */
-    .frame {
-      width:min(1100px, 92vw);
-      height:min(72vh, 760px);
-      border:1px solid var(--ring);
-      border-radius:18px;
-      overflow:hidden;
-      box-shadow:0 24px 60px rgba(0,0,0,.10);
-      position:relative;
-      background:#000;
-      opacity:0; /* hidden before scrolling into view */
-      transform:translateY(18px) scale(.98);
-      transition:opacity .7s ease, transform .7s ease;
-    }
-    section.is-visible .frame {
-      opacity:1;
-      transform:none; /* fade-in + move-up animation */
-    }
+  .caption{ position:absolute; left:0; right:0; bottom:0; padding:18px 20px;
+            background:linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0)); color:#fff; }
+  .caption h2{ margin:.2rem 0 .2rem; font-size:22px; font-weight:700; }
+  .caption p{ margin:0; font-size:15px; color:#e5e7eb; }
 
-    /* ===============================
-       Image inside each frame
-       =============================== */
-    .img {
-      position:absolute;
-      inset:0;
-      background-position:center;
-      background-size:contain;
-      background-repeat:no-repeat;
-      background-color:#000;
-      opacity:0;
-      transition:opacity .9s ease;
-    }
-    section.is-visible .img { opacity:1; }
+  .intro{ background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%); }
+  .intro .frame{ background:#fff; }
+  .intro .inner{ height:100%; display:grid; place-items:center; text-align:center; padding:24px; }
+  .intro h1{ font-size:40px; margin:0 0 10px; }
+  .intro p{ color:var(--muted); margin:0; }
 
-    /* ===============================
-       Caption overlay on images
-       =============================== */
-    .caption {
-      position:absolute;
-      left:0; right:0; bottom:0;
-      padding:18px 20px;
-      background:linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0));
-      color:#fff;
-    }
-    .caption h2 {
-      margin:.2rem 0 .2rem;
-      font-size:22px;
-      font-weight:700;
-    }
-    .caption p {
-      margin:0;
-      font-size:15px;
-      color:#e5e7eb;
-    }
-
-    /* ===============================
-       Intro section styling
-       =============================== */
-    .intro { background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%); }
-    .intro .frame { background:#fff; }
-    .intro .inner {
-      height:100%;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      padding:24px;
-    }
-    .intro h1 { font-size:40px; margin:0 0 10px; }
-    .intro p { color:var(--muted); margin:0; }
-
-    /* ===============================
-       Footer styling
-       =============================== */
-    footer {
-      text-align:center;
-      padding:18px;
-      color:var(--muted);
-    }
-  </style>
+  footer{ text-align:center; padding:18px; color:var(--muted); }
+</style>
 </head>
-
 <body>
-  <!-- Navigation placeholder (populated by nav.js) -->
   <div id="site-nav"></div>
 
-  <!-- Main Content Sections -->
   <main>
-
-    <!-- ===============================
-         Intro Section
-         =============================== -->
     <section class="intro">
       <div class="frame" style="display:grid;place-items:center;">
         <div class="inner">
           <h1>Integrated Circuits and Systems Laboratory</h1>
           <p class="lead preline">
-            Integrated Circuits and Systems Laboratory (ICSL) in the
-            Pusan National University primarily focuses on research
-            into low-power mixed-signal integrated circuits and systems
-            for biomedical interfaces, image sensors, power conversions,
-            and energy harvesting...
+Integrated Circuits and Systems Laboratory (ICSL) in the Pusan National University primarily focuses on research into low-power mixed-signal integrated circuits and systems for biomedical interfaces, image sensors, power conversions, and energy harvesting. We have developed a range of expertise, from signal processing algorithms to transistor-level circuit design techniques to system architecture developments through a few years of interdisciplinary research.
           </p>
           <div class="scroll-hint">
             <span class="bounce">↓</span>
@@ -148,101 +58,85 @@
       </div>
     </section>
 
-    <!-- ===============================
-         Section 1: Implantable Neural Interface
-         =============================== -->
     <section>
       <div class="frame">
         <div class="img" style="background-image:url(/images/intro_pic1.png)"></div>
         <div class="caption">
           <h2>Implantable Neural Interface</h2>
-          <p>...description text...</p>
+          <p>There have been many fully implantable neural interfaces in literature but most of the interfaces showed only short-term demonstrations.
+             In order to realize long-term in-vivo experiments with high reliability, 
+             We came up with a new neural interface system architecture and are trying to implement it by using the cutting-edge CMOS integrated circuit, MEMS design techniques, and packaging skills.</p>
         </div>
       </div>
     </section>
 
-    <!-- ===============================
-         Section 2: High Density Neuromodulation
-         =============================== -->
     <section>
       <div class="frame">
         <div class="img" style="background-image:url(/images/intro_pic2.png)"></div>
         <div class="caption">
           <h2>High Density Neuromodulation</h2>
-          <p>...description text...</p>
+          <p>Have you ever heard "Neuralink"? Neuralink is a company led by Elon Musk (a CEO in Tesla and Space-X), making high density neural interfaces for neuromodulation. 
+            One of the largest part of my research is also to develop a high density neural interface consuming less energy and occupying smaller area than anything ever reported.
+             Here is our recently developed 256-channel neural interface (left) consuming 9 μW/Ch and 0.009 mm2/Ch, requiring only 80 mm2 for the backend. 
+             It means that it consume less power and area than the one recently released by Neuralink (Comparison made with an assembled 2x RHD2132 and a 64-channel micromachined probe)</p>
         </div>
       </div>
     </section>
 
-    <!-- ===============================
-         Section 3: Highly Efficient Power Converters
-         =============================== -->
     <section>
       <div class="frame">
         <div class="img" style="background-image:url(/images/intro_pic3.jpg)"></div>
         <div class="caption">
           <h2>Highly Efficient Power Converters</h2>
-          <p>...description text...</p>
+          <p>Power management unit (PMU) is an one of the most essential building blocks for all electronics. 
+            In particular the careful design and distribution of PMU is highly required for low-power integrated circuits. The picture shows a > 80% PCE, switched-capacitor converter controller that is perfectly able to spread spurious tones (&lt;-80 dBm).</p>
         </div>
       </div>
     </section>
 
-    <!-- ===============================
-         Section 4: Energy Harvesting
-         =============================== -->
     <section>
       <div class="frame">
         <div class="img" style="background-image:url(/images/intro_pic4.jpg)"></div>
         <div class="caption">
           <h2>Energy Harvesting</h2>
-          <p>...description text...</p>
+          <p>Camera is an essential device that can improve quality of our life. But it is hard to supply energy to the cameras located in harsh environment. 
+            We have developed a self-powered CMOS image sensor where both of the imaging and energy harvesting are simultaneously performed, so that provides enough energy under 60 klux conditions for the imaging (15 fps) without any external energy sources.</p>
         </div>
       </div>
     </section>
-
   </main>
 
-  <!-- Footer (with auto-updating year) -->
   <footer>© <span id="y"></span> PNUICSL</footer>
 
-  <!-- ===============================
-       Scripts
-       =============================== -->
-  <script>
-    // IntersectionObserver for fade-in animation when sections enter viewport
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{
-        if (e.isIntersecting) e.target.classList.add('is-visible');
-        else e.target.classList.remove('is-visible');
-      });
-    }, { threshold: 0.35 });
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if (e.isIntersecting) e.target.classList.add('is-visible');
+      else e.target.classList.remove('is-visible');
+    });
+  }, { threshold: 0.35 });
+  document.querySelectorAll('section').forEach(sec=>io.observe(sec));
+  document.getElementById('y').textContent = new Date().getFullYear();
+</script>
 
-    // Observe all <section> elements
-    document.querySelectorAll('section').forEach(sec=>io.observe(sec));
+<script src="/assets/nav.js" data-base="/"></script>
 
-    // Update footer year automatically
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
+<script>
+  (function addNavTitle(){
+    function place(){
+      const inner = document.querySelector('.nav .nav-inner');
+      if(!inner) return setTimeout(place, 30); 
+      const t = document.createElement('div');
+      t.className = 'nav-title';
+      t.textContent = 'PNU ICSL'; 
+      inner.appendChild(t);
+    }
+    place();
+  })();
+</script>
 
-  <!-- Navigation script -->
-  <script src="/assets/nav.js" data-base="/"></script>
+<!-- 🔒 Protect script -->
+<script src="/assets/project.js"></script>
 
-  <script>
-    // Dynamically add navigation title after nav.js loads
-    (function addNavTitle(){
-      function place(){
-        const inner = document.querySelector('.nav .nav-inner');
-        if(!inner) return setTimeout(place, 30);
-        const t = document.createElement('div');
-        t.className = 'nav-title';
-        t.textContent = 'PNU ICSL';
-        inner.appendChild(t);
-      }
-      place();
-    })();
-  </script>
-
-  <!-- Additional project-related script -->
-  <script src="/assets/project.js"></script>
 </body>
 </html>
