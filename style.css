@@ -358,3 +358,17 @@ main section .caption p  { font-size: clamp(11px, 3.4vw, 18px) !important; line-
 @media (max-width:480px){
   .subnav h1 { font-size: 22px; }
 }
+
+@media (max-width: 768px){
+  .nav-inner{ overflow: visible; }
+  .menu{
+    overflow-x: auto;
+    overflow-y: visible; /* ← 중요: hidden이면 드롭다운이 잘립니다 */
+  }
+  .dropdown{ position: relative; }
+  .dropdown-menu{
+    left: 0; right: auto;
+    top: calc(100% + 6px);
+    z-index: 9999;
+  }
+}
